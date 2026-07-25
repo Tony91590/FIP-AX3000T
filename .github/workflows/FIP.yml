@@ -16,11 +16,14 @@ env:
   SSH_ACTIONS: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
-  TZ: Asia/Shanghai
+  TZ: Europe/Paris
 
   OPENWRT_NAME: hanwckf
   DEVICE_NAME: xiaomi_ax3000t-fip
 
+permissions:
+  contents: write
+  
 jobs:
   build:
     runs-on: ubuntu-latest
