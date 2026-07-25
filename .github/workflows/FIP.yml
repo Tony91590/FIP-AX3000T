@@ -12,7 +12,7 @@ on:
 env:
   REPO_URL: https://github.com/hanwckf/bl-mt798x
   REPO_BRANCH: master
-  DIY_P_SH: hanwckf/Redmi-AX6000-FIP/diy-part.sh
+  DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
