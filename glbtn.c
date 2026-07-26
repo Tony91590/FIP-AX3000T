@@ -57,17 +57,21 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[
 
 	gpio_power_clr();
 
-	button_label = env_get("glbtn_key");
-	if (!button_label)
-		button_label = "reset";
+	ret = button_get_by_label("reset", &dev_reset);
+	if (ret)
+		dev_reset = NULL;
 
-	ret = button_get_by_label(button_label, &dev);
-	if (ret) {
-		printf("Button '%s' not found (err=%d)\n", button_label, ret);
+	ret = button_get_by_label("mesh", &dev_mesh);
+	if (ret)
+		dev_mesh = NULL;
+
+	if (!dev_reset && !dev_mesh) {
+		printf("Buttons 'reset' and 'mesh' not found\n");
 		return CMD_RET_FAILURE;
 	}
 
-	if (!button_get_state(dev)) {
+	if ((!dev_reset || !button_get_state(dev_reset)) &&
+	    (!dev_mesh || !button_get_state(dev_mesh))) {
 		poller_async_register(&led_p, "led_pa");
 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
 		return CMD_RET_SUCCESS;
