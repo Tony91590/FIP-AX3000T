@@ -1,7 +1,21 @@
 --- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 +++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
-@@ -32,17 +33,22 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
- 
+@@ -48,26 +48,30 @@
+
+ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+ {
+-	const char *button_label = NULL;
+-	int ret, counter = 0;
+-	struct udevice *dev;
++ 	int ret, counter = 0;
++	struct udevice *dev_reset = NULL;
++	struct udevice *dev_mesh = NULL;
+ 	ulong ts;
+
+ 	led_control("ledblink", "blink_led", "250");
+
+ 	gpio_power_clr();
+
 -	button_label = env_get("glbtn_key");
 -	if (!button_label)
 -		button_label = "reset";
@@ -9,8 +23,6 @@
 -	ret = button_get_by_label(button_label, &dev);
 -	if (ret) {
 -		printf("Button '%s' not found (err=%d)\n", button_label, ret);
--		return CMD_RET_FAILURE;
--	}
 +	ret = button_get_by_label("reset", &dev_reset);
 +	if (ret)
 +		dev_reset = NULL;
@@ -21,8 +33,8 @@
 +
 +	if (!dev_reset && !dev_mesh) {
 +		printf("Buttons 'reset' and 'mesh' not found\n");
-+		return CMD_RET_FAILURE;
-+	}
+ 		return CMD_RET_FAILURE;
+ 	}
 
 -	if (!button_get_state(dev)) {
 +	if ((!dev_reset || !button_get_state(dev_reset)) &&
@@ -30,12 +42,15 @@
  		poller_async_register(&led_p, "led_pa");
  		poller_call_async(&led_p, 1000000, led_action_post, NULL);
  		return CMD_RET_SUCCESS;
-@@ -52,11 +58,12 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
- 
+@@ -75,11 +79,13 @@
+
+ 	led_control("ledblink", "blink_led", "500");
+
 -	printf("RESET button is pressed for: %2d second(s)", counter++);
 +	printf("BUTTON is pressed for: %2d second(s)", counter++);
 
- 	ts = get_timer(0);
+-	ts = get_timer(0);
++ 	ts = get_timer(0);
 
 -	while (button_get_state(dev) && counter < 4) {
 +	while (((dev_reset && button_get_state(dev_reset)) ||
