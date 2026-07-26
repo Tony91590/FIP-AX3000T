@@ -1,16 +1,5 @@
 --- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 +++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
-@@ -22,7 +22,8 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
- {
--	const char *button_label = NULL;
- 	int ret, counter = 0;
--	struct udevice *dev;
-+	struct udevice *dev_reset = NULL;
-+	struct udevice *dev_mesh = NULL;
- 	ulong ts;
-
- 	led_control("ledblink", "blink_led", "250");
-
 @@ -32,17 +33,22 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
  
 -	button_label = env_get("glbtn_key");
