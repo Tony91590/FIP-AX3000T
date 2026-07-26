@@ -7,7 +7,7 @@
 -	const char *button_label = NULL;
 -	int ret, counter = 0;
 -	struct udevice *dev;
-+ int ret, counter = 0;
++	int ret, counter = 0;0;
 +	struct udevice *dev_reset = NULL;
 +	struct udevice *dev_mesh = NULL;
  	ulong ts;
@@ -50,7 +50,7 @@
 +	printf("BUTTON is pressed for: %2d second(s)", counter++);
 
 -	ts = get_timer(0);
-+ ts = get_timer(0);
++	ts = get_timer(0);
 
 -	while (button_get_state(dev) && counter < 4) {
 +	while (((dev_reset && button_get_state(dev_reset)) ||
