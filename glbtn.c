@@ -79,11 +79,13 @@ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[
 
 	led_control("ledblink", "blink_led", "500");
 
-	printf("RESET button is pressed for: %2d second(s)", counter++);
+	printf("BUTTON is pressed for: %2d second(s)", counter++);
 
-	ts = get_timer(0);
+ 	ts = get_timer(0);
 
-	while (button_get_state(dev) && counter < 4) {
+	while (((dev_reset && button_get_state(dev_reset)) ||
+		(dev_mesh && button_get_state(dev_mesh))) &&
+	       counter < 4) {
 		if (get_timer(ts) < 1000)
 			continue;
 
