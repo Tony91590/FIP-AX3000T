@@ -54,6 +54,7 @@
 +	       counter < 4) {
  		if (get_timer(ts) < 1000)
  			continue;
+===================================================================    
 --- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 +++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 @@ -23,7 +23,7 @@
