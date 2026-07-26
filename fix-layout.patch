@@ -1,3 +1,34 @@
+--- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
++++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
+@@ -23,7 +23,7 @@
+
+ 	mtd-layout {
+ 		layout@0 {
+-			label = "default";
++			label = "stock-layout";
+ 			// mtd layout for xiaomi stock ubi or openwrt-stock/immortalwrt-stock firmware
+ 			cmdline = "console=ttyS0,115200n1 loglevel=8 swiotlb=512 firmware=0 mtd=ubi uart_en=1";
+ 			mtdids = "nmbm0=nmbm0";
+@@ -35,18 +35,11 @@
+ 		};
+
+ 		layout@1 {
+-			label = "immortalwrt-112m";
++			label = "112m-layout";
+ 			// mtd layout for immortalwrt/openwrt 112M ubi firmware
+ 			mtdids = "nmbm0=nmbm0";
+ 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
+ 		};
+-
+-		layout@2 {
+-			label = "qwrt";
+-			// mtd layout for lean qwrt
+-			mtdids = "nmbm0=nmbm0";
+-			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
+-		};
+ 	};
+
+ 	gpio-keys {
 --- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 +++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 @@ -48,26 +48,30 @@
@@ -57,36 +88,4 @@
 +		(dev_mesh && button_get_state(dev_mesh))) &&
 +	       counter < 4) {
  		if (get_timer(ts) < 1000)
- 			continue;   
-    
---- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
-+++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
-@@ -23,7 +23,7 @@
-
- 	mtd-layout {
- 		layout@0 {
--			label = "default";
-+			label = "stock-layout";
- 			// mtd layout for xiaomi stock ubi or openwrt-stock/immortalwrt-stock firmware
- 			cmdline = "console=ttyS0,115200n1 loglevel=8 swiotlb=512 firmware=0 mtd=ubi uart_en=1";
- 			mtdids = "nmbm0=nmbm0";
-@@ -35,18 +35,11 @@
- 		};
-
- 		layout@1 {
--			label = "immortalwrt-112m";
-+			label = "112m-layout";
- 			// mtd layout for immortalwrt/openwrt 112M ubi firmware
- 			mtdids = "nmbm0=nmbm0";
- 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
- 		};
--
--		layout@2 {
--			label = "qwrt";
--			// mtd layout for lean qwrt
--			mtdids = "nmbm0=nmbm0";
--			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
--		};
- 	};
-
- 	gpio-keys {
+ 			continue;
