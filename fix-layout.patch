@@ -38,7 +38,7 @@
 -	const char *button_label = NULL;
 -	int ret, counter = 0;
 -	struct udevice *dev;
-+	int ret, counter = 0;0;
++	int ret, counter = 0;
 +	struct udevice *dev_reset = NULL;
 +	struct udevice *dev_mesh = NULL;
  	ulong ts;
