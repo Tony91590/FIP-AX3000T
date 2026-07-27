@@ -1,5 +1,5 @@
---- a/uboot-mtk-20250711/arch/arm/dts/mt7981-xiaomi-ax3000t.dts
-+++ b/uboot-mtk-20250711/arch/arm/dts/mt7981-xiaomi-ax3000t.dts
+--- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
++++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 @@ -23,7 +23,7 @@
 
  	mtd-layout {
