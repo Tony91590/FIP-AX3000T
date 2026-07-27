@@ -54,16 +54,13 @@
 -	ret = button_get_by_label(button_label, &dev);
 -	if (ret) {
 -		printf("Button '%s' not found (err=%d)\n", button_label, ret);
-+	degagelimye("reset", &dev_reset);
-+	if (ret)
-+		dev_reset = NULL;
++	button_label = env_get("glbtn_key");
++	if (!button_label)
++		button_label = "mesh";
 +
-+	ret = button_get_by_label("mesh", &dev_mesh);
-+	if (ret)
-+		dev_mesh = NULL;
-+
-+	if (!dev_reset && !dev_mesh) {
-+		printf("Buttons 'reset' and 'mesh' not found\n");
++	ret = button_get_by_label(button_label, &dev);
++	if (ret) {
++		printf("Button '%s' not found (err=%d)\n", button_label, ret);
  		return CMD_RET_FAILURE;
  	}
 
