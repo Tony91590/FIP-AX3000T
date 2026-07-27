@@ -11,7 +11,7 @@ on:
 
 env:
   REPO_URL: https://github.com/Yuzhii0718/bl-mt798x-dhcpd
-  REPO_BRANCH: master
+  REPO_BRANCH: old-version
   DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
   UPLOAD_FIRMWARE: true
