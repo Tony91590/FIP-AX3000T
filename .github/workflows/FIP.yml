@@ -111,6 +111,7 @@ jobs:
 
           SOC=mt7981 \
           BOARD=ax3000t \
+          FSTHEME=gl \
           VERSION=2023 \
           FIXED_MTDPARTS=1 \
           MULTI_LAYOUT=1 \
