@@ -38,9 +38,9 @@
 -	const char *button_label = NULL;
 -	int ret, counter = 0;
 -	struct udevice *dev;
-+	int ret, counter = 0;0;
-+	struct udevice *dev_reset = NULL;
-+	struct udevice *dev_mesh = NULL;
++	const char *button_label = NULL;
++	int ret, counter = 0;
++	struct udevice *dev;
  	ulong ts;
 
  	led_control("ledblink", "blink_led", "250");
@@ -54,7 +54,7 @@
 -	ret = button_get_by_label(button_label, &dev);
 -	if (ret) {
 -		printf("Button '%s' not found (err=%d)\n", button_label, ret);
-+	ret = button_get_by_label("reset", &dev_reset);
++	degagelimye("reset", &dev_reset);
 +	if (ret)
 +		dev_reset = NULL;
 +
