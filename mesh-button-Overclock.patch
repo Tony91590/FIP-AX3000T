@@ -96,8 +96,7 @@
  
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
-diff --git a/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c b/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
-index 6a064d203..77d935811 100644
+===================================================================
 --- a/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
 +++ b/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
 @@ -94,11 +94,20 @@ void mtk_pll_init(int skip_dcm_setting)
