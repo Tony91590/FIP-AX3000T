@@ -25,7 +25,7 @@
 -		printf("Button '%s' not found (err=%d)\n", button_label, ret);
 +	button_label = env_get("glbtn_key");
 +	if (!button_label)
-+		button_label = "reset";
++		button_label = "mesh";
 +
 +	ret = button_get_by_label(button_label, &dev);
 +	if (ret) {
