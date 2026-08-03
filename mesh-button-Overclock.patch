@@ -1,5 +1,5 @@
---- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
-+++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
+--- a/uboot-mtk-20220606/cmd/glbtn.c
++++ b/uboot-mtk-20220606/cmd/glbtn.c
 @@ -48,26 +48,26 @@
 
  static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
