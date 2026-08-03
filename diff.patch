@@ -67,6 +67,7 @@
  
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
+===================================================================
 --- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 +++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 @@ -40,13 +40,6 @@
