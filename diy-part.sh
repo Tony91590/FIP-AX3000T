@@ -3,3 +3,5 @@
 PATCH_FILE="$GITHUB_WORKSPACE/diff.patch"
 patch -p1 < "$PATCH_FILE"
 
+
+b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
