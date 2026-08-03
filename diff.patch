@@ -14,7 +14,9 @@
  	};
 
  	gpio-keys {
-++++++++++++++++++
+===================================================================
+--- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
++++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
 @@ -19,7 +19,7 @@
  #define BUS_PLL_DIVIDER 		0x104007c0
 
