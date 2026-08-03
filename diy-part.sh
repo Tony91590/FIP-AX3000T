@@ -6,3 +6,4 @@ patch -p1 < "$PATCH_FILE"
 
 b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
+b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
