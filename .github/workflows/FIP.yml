@@ -121,7 +121,7 @@ jobs:
 
           SOC=mt7981 \
           BOARD=xiaomi_ax3000t \
-          VERSION=SP1 \
+          VERSION=2025 \
           FIXED_MTDPARTS=1 \
           MULTI_LAYOUT=1 \
           ./build.sh
