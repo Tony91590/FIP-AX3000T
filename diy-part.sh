@@ -4,6 +4,6 @@ PATCH_FILE="$GITHUB_WORKSPACE/diff.patch"
 patch -p1 < "$PATCH_FILE"
 
 
-b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
-b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
-b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
+rm -f uboot-mtk-20230718-09eda825/cmd/glbtn.c.orig
+rm -f atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c.orig
+rm -f uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts.orig
