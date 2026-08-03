@@ -1,19 +1,17 @@
 --- a/build.sh	
 +++ b/build.sh
-@@ -1,10 +1,10 @@
--#!/bin/sh
-+#!/bin/sh
- 
+@@ -2,9 +2,9 @@
+
  TOOLCHAIN=aarch64-linux-gnu-
  #UBOOT_DIR=uboot-mtk-20220606
- UBOOT_DIR=uboot-mtk-20230718-09eda825
--#ATF_DIR=atf-20220606-637ba581b
--ATF_DIR=atf-20231013-0ea67d76a
-+ATF_DIR=atf-20220606-637ba581b
-+#ATF_DIR=atf-20231013-0ea67d76a
- 
+-UBOOT_DIR=uboot-mtk-20230718-09eda825
++UBOOT_DIR=uboot-mtk-20230718-09eda825or
+ #ATF_DIR=atf-20220606-637ba581b
+-ATF_DIR=atf-20240117-bacca82a8
++ATF_DIR=atf-20240117-bacca82a80r
+
  if [ -z "$SOC" ] || [ -z "$BOARD" ]; then
- 	echo "Usage: SOC=[mt7981|mt7986] BOARD=<board name> MULTI_LAYOUT=[0
+ 	echo "Usage: SOC=[mt7981|mt7986] BOARD=<board name> MULTI_LAYOUT=[0|1] $0"
 ===================================================================
 --- a/uboot-mtk-20220606/cmd/glbtn.c
 +++ b/uboot-mtk-20220606/cmd/glbtn.c
