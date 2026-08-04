@@ -17,11 +17,10 @@
  	ulong ts;
 
  	led_control("ledblink", "blink_led", "250");
-@@ -58,34 +64,73 @@
+@@ -58,34 +64,71 @@
  	gpio_power_clr();
 
  	button_label = env_get("glbtn_key");
-+
  	if (!button_label)
 -		button_label = "reset";
 +		button_label = "reset,mesh";
@@ -94,9 +93,7 @@
 
  		ts = get_timer(0);
 
--		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
-+		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)",
-+		       counter++);
+ 		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
  	}
 
  	printf("\n");
