@@ -17,7 +17,7 @@
  	ulong ts;
 
  	led_control("ledblink", "blink_led", "250");
-@@ -58,34 +64,74 @@
+@@ -58,34 +64,73 @@
  	gpio_power_clr();
 
  	button_label = env_get("glbtn_key");
@@ -50,7 +50,6 @@
  	}
 
 -	if (!button_get_state(dev)) {
-+	/* Aucun bouton appuyé au lancement */
 +	pressed = 0;
 +
 +	for (i = 0; i < btn_count; i++) {
