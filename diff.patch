@@ -143,7 +143,7 @@
 @@ -64,7 +64,8 @@
  #define CON1_PCW_CHG		BIT(31)
  #define UNIV_48M_EN		BIT(27)
-
+-
 +#define DIVIDE_RATIO_BIT4	0x10
 +#define ARMPLL_CON1_ALL0	0xFF000000
  #define SCP_AXICK_DCM_DIS_EN	BIT(0)
