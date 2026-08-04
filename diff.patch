@@ -156,6 +156,12 @@
  	if (skip_dcm_setting == 0) {
  		mmio_setbits_32(VDNR_DCM_TOP_INFRA_CTRL_0, 0x2);
 ===================================================================
+--- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
++++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
+@@ -70,8 +70,14 @@
+
+
+===================================================================
 --- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 +++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
 @@ -40,13 +40,6 @@
