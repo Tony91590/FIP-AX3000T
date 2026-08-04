@@ -10,9 +10,9 @@ on:
         default: "false"
 
 env:
-  REPO_URL: https://github.com/hanwckf/bl-mt798x
-  REPO_BRANCH: master
-  REPO_COMMIT: 15ad0ed949043bcbbcb5ef501ba156b1f25e676f
+  REPO_URL: https://github.com/Tony91590/bl-mt798x
+  REPO_BRANCH: padavan
+  REPO_COMMIT: 
   DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
   UPLOAD_FIRMWARE: true
