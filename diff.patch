@@ -1,5 +1,5 @@
---- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
-+++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
+--- a/uboot-mtk-20220606/cmd/glbtn.c
++++ b/uboot-mtk-20220606/cmd/glbtn.c
 @@ -49,8 +49,14 @@
  static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
  {
@@ -96,8 +96,8 @@
 
  	printf("\n");
 ===================================================================
---- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
-+++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
+--- a/uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts
++++ b/uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts
 @@ -40,13 +40,6 @@
  			mtdids = "nmbm0=nmbm0";
  			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
