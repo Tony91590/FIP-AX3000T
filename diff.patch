@@ -16,26 +16,29 @@
  	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
  
  	/* Set PLL frequency */
--	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
--
--	//mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
--
--	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	// 251218: overclock hack
-+	NOTICE("THIS IS AN OVERCLOKING BL2!\n");
-+	NOTICE("set arm freq to 1.60 GHz:\n");
++ // 241208: overclock hack
++ NOTICE("THIS IS AN OVERCLOKING BL2!\n");
++ NOTICE("set arm freq to 1.60 GHz:\n");
 +
-+	// mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
-+	mmio_write_32(ARMPLL_CON1, 0x50000000); /* 1.6G */
-+	// mmio_write_32(ARMPLL_CON1, 0x55000000); /* 1.7G */
-+	NOTICE("ARMPLL_CON1 = 0x%x\n", mmio_read_32(ARMPLL_CON1));
++ // 设置频率值，SDMPLL fractional mode，这里只需修改高8位
++ // 原始为2分频，0x82 = 130，实际对应1.3GHz：
++ // mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */）
++ // 由于这个值再大一些的话会设置失败，所以我们要使用1分频（不分频）：
++ // 例如：0x50 = 80，此时对应1.6G； 0x55 = 85，对应1.7G，一次类推
 +
-+	// mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
-+	// mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	mmio_clrbits_32(ARMPLL_CON0, 0x70); /* divider for >1.3G */
-+	mmio_setbits_32(ARMPLL_CON0, 0x104);
-+	NOTICE("ARMPLL_CON0 = 0x%x\n", mmio_read_32(ARMPLL_CON0));
- 
++ mmio_write_32(ARMPLL_CON1, 0x50000000); /* 1.6G */
++ // mmio_write_32(ARMPLL_CON1, 0x55000000); /* 1.7G */
++ NOTICE("ARMPLL_CON1 = 0x%x\n", mmio_read_32(ARMPLL_CON1));
++
++ // 设置分频比，原始为2分频，还有个注释掉的4分频（用这个就是650MHz）：
++ // //mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
++ // mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
++
++ // 修改为不分频，这个寄存器的4～6位（从0开始数）为分频值，由于默认是001（2分频），这里要将其清零（1分频），然后再设置其余bits
++ mmio_clrbits_32(ARMPLL_CON0, 0x70); /* divider for >1.3G */
++ mmio_setbits_32(ARMPLL_CON0, 0x104);
++ NOTICE("ARMPLL_CON0 = 0x%x\n", mmio_read_32(ARMPLL_CON0));
+
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
 ===================================================================
