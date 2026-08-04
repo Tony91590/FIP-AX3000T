@@ -12,7 +12,8 @@
 ===================================================================
 --- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
 +++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
-@@ -76,11 +76,18 @@ void mtk_pll_init(int skip_dcm_setting)
+@@ -94,11 +94,20 @@ void mtk_pll_init(int skip_dcm_setting)
+ 	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
  
  	/* Set PLL frequency */
 -	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
