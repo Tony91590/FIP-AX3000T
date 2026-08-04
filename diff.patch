@@ -146,7 +146,7 @@
  #define UNIV_48M_EN		BIT(27)
 -
 +#define DIVIDE_RATIO_BIT4	0x10
-+#define ARMPLL_CON1_ALL0        0xFF000000
++#define ARMPLL_CON1_ALL0     0xFF000000
  #define SCP_AXICK_DCM_DIS_EN	BIT(0)
  #define SCP_AXICK_26M_SEL_EN	BIT(4)
 ===================================================================
