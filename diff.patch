@@ -140,7 +140,7 @@
 ===================================================================
 --- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
 +++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
-@@ -65,6 +65,8 @@
+@@ -64,7 +64,8 @@
  #define CON1_PCW_CHG		BIT(31)
  #define UNIV_48M_EN		BIT(27)
 
