@@ -17,7 +17,7 @@
  	ulong ts;
 
  	led_control("ledblink", "blink_led", "250");
-@@ -58,34 +64,71 @@
+@@ -58,34 +64,70 @@
  	gpio_power_clr();
 
  	button_label = env_get("glbtn_key");
@@ -60,9 +60,7 @@
 +
 +	if (!pressed) {
  		poller_async_register(&led_p, "led_pa");
--		poller_call_async(&led_p, 1000000, led_action_post, NULL);
-+		poller_call_async(&led_p, 1000000,
-+				  led_action_post, NULL);
+ 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
  		return CMD_RET_SUCCESS;
  	}
 
