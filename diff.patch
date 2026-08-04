@@ -121,7 +121,7 @@
  	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
 +
 +
-+       	mmio_clrbits_32(ARMPLL_CON0 , DIVIDE_RATIO_BIT4);  //can clear - depand on armpll_con1
++	mmio_clrbits_32(ARMPLL_CON0 , DIVIDE_RATIO_BIT4);  //can clear - depand on armpll_con1
 
  	/* Set PLL frequency */
 -	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
