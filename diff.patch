@@ -112,3 +112,118 @@
  	};
 
  	gpio-keys {
+===================================================================
+--- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
++++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
+@@ -49,8 +49,14 @@
+ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+ {
+ 	const char *button_label = NULL;
+-	int ret, counter = 0;
+-	struct udevice *dev;
++	char buttons[128];
++	char *name;
++	struct udevice *dev[2];
++	int btn_count = 0;
++	int ret;
++	int counter = 0;
++	int i;
++	int pressed;
+ 	ulong ts;
+
+ 	led_control("ledblink", "blink_led", "250");
+@@ -58,34 +64,70 @@
+ 	gpio_power_clr();
+
+ 	button_label = env_get("glbtn_key");
+ 	if (!button_label)
+-		button_label = "reset";
++		button_label = "reset,mesh";
++
++	strncpy(buttons, button_label, sizeof(buttons) - 1);
++	buttons[sizeof(buttons) - 1] = '\0';
++
++	name = strtok(buttons, ",");
++
++	while (name && btn_count < 2) {
++
++		ret = button_get_by_label(name, &dev[btn_count]);
++
++		if (!ret)
++			btn_count++;
++
++		name = strtok(NULL, ",");
++	}
+
+-	ret = button_get_by_label(button_label, &dev);
+-	if (ret) {
+-		printf("Button '%s' not found (err=%d)\n", button_label, ret);
++	if (!btn_count) {
++		printf("Buttons '%s' not found\n", button_label);
+ 		return CMD_RET_FAILURE;
+ 	}
+
+-	if (!button_get_state(dev)) {
++	pressed = 0;
++
++	for (i = 0; i < btn_count; i++) {
++		if (button_get_state(dev[i])) {
++			pressed = 1;
++			break;
++		}
++	}
++
++	if (!pressed) {
+ 		poller_async_register(&led_p, "led_pa");
+ 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
+ 		return CMD_RET_SUCCESS;
+ 	}
+
+ 	led_control("ledblink", "blink_led", "500");
+
+-	printf("RESET button is pressed for: %2d second(s)", counter++);
++	printf("BUTTON is pressed for: %2d second(s)", counter++);
+
+ 	ts = get_timer(0);
+
+-	while (button_get_state(dev) && counter < 4) {
++	while (counter < 4) {
++
++		pressed = 0;
++
++		for (i = 0; i < btn_count; i++) {
++			if (button_get_state(dev[i])) {
++				pressed = 1;
++				break;
++			}
++		}
++
++		if (!pressed)
++			break;
++
+ 		if (get_timer(ts) < 1000)
+ 			continue;
+
+ 		ts = get_timer(0);
+
+ 		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
+ 	}
+
+ 	printf("\n");
+===================================================================
+--- a/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
++++ b/uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts
+@@ -40,13 +40,6 @@
+ 			mtdids = "nmbm0=nmbm0";
+ 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
+ 		};
+-
+-		layout@2 {
+-			label = "qwrt";
+-			// mtd layout for lean qwrt
+-			mtdids = "nmbm0=nmbm0";
+-			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
+-		};
+ 	};
+
+ 	gpio-keys {
