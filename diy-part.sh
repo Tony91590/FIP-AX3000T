@@ -1,5 +1,19 @@
 # diy ATF and u-boot for xiaomi ax3000t based on mt798x
 
+# UBOOT_DIR=uboot-mtk-20220606
+# UBOOT_DIR=uboot-mtk-20230718-09eda825
+# ATF_DIR=atf-20220606-637ba581b
+# ATF_DIR=atf-20231013-0ea67d76a
+# ATF_DIR=atf-20240117-bacca82a8
+
+BUILD_SH="build.sh"
+
+# Modifier U-Boot
+sed -i 's/^UBOOT_DIR=.*/UBOOT_DIR=uboot-mtk/' "$BUILD_SH"
+
+# Modifier ATF
+sed -i 's/^ATF_DIR=.*/ATF_DIR=ATF/' "$BUILD_SH"
+
 git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/atf-20231013-0ea67d76a ./
 rm -rf tmp_imm
