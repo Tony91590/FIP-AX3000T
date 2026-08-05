@@ -2,10 +2,8 @@
 
 BUILD_SH="build.sh"
 
-# Choix des versions
 UBOOT_SEL=2
 ATF_SEL=2
-
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
@@ -18,8 +16,8 @@ case $ATF_SEL in
     3) ATF="atf-20240117-bacca82a8" ;;
 esac
 
-sed -i "s|^# *UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
-sed -i "s|^# *ATF_DIR=.*|ATF_DIR=$ATF|" "$BUILD_SH"
+sed -i -E "s|^[# ]*UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
+sed -i -E "s|^[# ]*ATF_DIR=.*|ATF_DIR=$ATF|" "$BUILD_SH"
 
 git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/atf-20231013-0ea67d76a ./
