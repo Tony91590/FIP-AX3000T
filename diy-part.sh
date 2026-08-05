@@ -1,5 +1,9 @@
 # diy ATF and u-boot for xiaomi ax3000t based on mt798x
 
+git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
+cp -r tmp_imm/atf-20231013-0ea67d76a ./
+rm -rf tmp_imm
+
 PATCH_FILE="$GITHUB_WORKSPACE/diff.patch"
 patch -p1 < "$PATCH_FILE"
 
