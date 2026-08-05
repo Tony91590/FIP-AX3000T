@@ -9,10 +9,10 @@
 BUILD_SH="build.sh"
 
 # Modifier U-Boot
-sed -i 's/^UBOOT_DIR=.*/UBOOT_DIR=uboot-mtk/' "$BUILD_SH"
+sed -i 's/^UBOOT_DIR=.*/UBOOT_DIR=uboot-mtk-20230718-09eda825/' "$BUILD_SH"
 
 # Modifier ATF
-sed -i 's/^ATF_DIR=.*/ATF_DIR=ATF/' "$BUILD_SH"
+sed -i 's/^ATF_DIR=.*/ATF_DIR=atf-20231013-0ea67d76a/' "$BUILD_SH"
 
 git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/atf-20231013-0ea67d76a ./
