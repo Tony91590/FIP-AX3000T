@@ -46,7 +46,7 @@ rm -f uboot-mtk-20250711/arch/arm/dts/mt7981-ax3000t.dts.orig
 # 4 = 1640MHz 0x52000000
 # 5 = 1700MHz 0x55000000
 
-FREQ_SELECT=3
+FREQ_SELECT=2
 
 
 case "$FREQ_SELECT" in
