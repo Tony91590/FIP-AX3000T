@@ -110,7 +110,7 @@ jobs:
           echo "Compilation avec $(nproc) threads"
 
           SOC=mt7981 \
-          BOARD=ax3000t \
+          BOARD=xiaomi_ax3000t \
           MULTI_LAYOUT=1 \
           FIXED_MTDPARTS=1 \
           ./build.sh
