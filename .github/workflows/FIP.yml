@@ -74,7 +74,7 @@ jobs:
             libelf-dev \
             device-tree-compiler
 
-          echo "CROSS_COMPILE=aarch64-linux-gnu-" >> $GITHUB_ENV
+            echo "CROSS_COMPILE=aarch64-linux-gnu-" >> $GITHUB_ENV
           
             apt-get autoremove -y
             apt-get clean
