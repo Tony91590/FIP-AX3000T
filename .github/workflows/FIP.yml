@@ -54,6 +54,7 @@ jobs:
           libssl-dev \
           device-tree-compiler \
           qemu-user-static \
+          uuid-dev \
           python2.7 \
           gcc-arm-linux-gnueabi \
           nodejs \
