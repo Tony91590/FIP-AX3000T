@@ -109,12 +109,7 @@ jobs:
 
           echo "Compilation avec $(nproc) threads"
 
-          SOC=mt7981 \
-          BOARD=ax3000t \
-          MULTI_LAYOUT=1 \
-          FIXED_MTDPARTS=1 \
           ./build.sh
-
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
