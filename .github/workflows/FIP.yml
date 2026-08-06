@@ -45,7 +45,6 @@ jobs:
           rm -rf /opt/ghc
 
           apt-get update
-          
           apt-get install -y \
           gcc-aarch64-linux-gnu \
           build-essential \
@@ -56,6 +55,11 @@ jobs:
           qemu-user-static \
           uuid-dev \
           python2.7 \
+          python3 \
+          bash \
+          make \
+          perl \
+          bc \
           gcc-arm-linux-gnueabi \
           nodejs \
           npm
@@ -106,7 +110,7 @@ jobs:
           echo "Compilation avec $(nproc) threads"
 
           SOC=mt7981 \
-          BOARD=xiaomi_ax3000t \
+          BOARD=ax3000t \
           MULTI_LAYOUT=1 \
           FIXED_MTDPARTS=1 \
           ./build.sh
