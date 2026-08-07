@@ -71,6 +71,9 @@ jobs:
 
           echo "CROSS_COMPILE=aarch64-linux-gnu-" >> $GITHUB_ENV
 
+          mkdir -p /workdir
+          chown "$USER":"$GROUPS" /workdir || true
+
           echo "Python:"
           python --version
 
