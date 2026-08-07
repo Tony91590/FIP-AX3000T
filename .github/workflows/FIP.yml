@@ -155,7 +155,7 @@ jobs:
           echo "release_tag=${{ env.FILE_DATE }}-${{ env.OPENWRT_NAME }}-${{ env.DEVICE_NAME }}" >> $GITHUB_OUTPUT
 
           cat > release.txt << EOF
-          xiaomi AX3000T FIP U-Boot
+          xiaomi AX3000T FIP U-Boot BL2 ATF
 
           Date de compilation :
           ${{ env.FILE_DATE }}
