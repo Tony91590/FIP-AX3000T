@@ -82,9 +82,6 @@ jobs:
 
           apt-get update -qq
 
-          # Install project dependencies
-          apt-get install -y -qq $(curl -fsSL git.io/depends-ubuntu-2004)
-
           ##------Build Prepare------
           apt-get install -y -qq gcc-aarch64-linux-gnu
           export CROSS_COMPILE=aarch64-linux-gnu-
