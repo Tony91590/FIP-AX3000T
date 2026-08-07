@@ -20,7 +20,7 @@ env:
   TZ: Europe/Paris
 
   OPENWRT_NAME: hanwckf
-  DEVICE_NAME: xiaomi_ax3000t-fip
+  DEVICE_NAME: xiaomi_ax3000t-fip-bl2
 
 permissions:
   contents: write
