@@ -19,7 +19,7 @@ env:
   UPLOAD_RELEASE: true
   TZ: Europe/Paris
 
-  OPENWRT_NAME: hanwckf
+ OPENWRT_NAME: hanwckf
   DEVICE_NAME: xiaomi_ax3000t-fip
 
 permissions:
@@ -27,11 +27,10 @@ permissions:
   
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-          matrix:
-            os:
-              - ubuntu-22.04
+    runs-on: ubuntu-latest
+
+    container:
+      image:  ubuntu:20.04
 
     steps:
       - name: Checkout
@@ -41,15 +40,74 @@ jobs:
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
-           sudo -E apt-get -qq update
-           sudo -E apt-get -qq install $(cat $GITHUB_WORKSPACE/depends/${{ matrix.os }})
-           sudo -E apt-get -qq install rename
-           sudo -E apt-get -qq autoremove --purge
-           sudo -E apt-get -qq clean
-           sudo timedatectl set-timezone "$TZ"
-           sudo mkdir -p /workdir
-           sudo chown $USER:$GROUPS /workdir
+          # Configure timezone
+          ln -fs /usr/share/zoneinfo/$TZ /etc/localtime || true
+          echo "$TZ" > /etc/timezone || true
+
+          # Basic tools required by the build
+          apt-get update -qq
+
+          apt-get install -y -qq \
+          ca-certificates \
+          curl \
+          git \
+          sudo \
+          python3 \
+          python3-pip \
+          python3-distutils \
+          build-essential \
+          bison \
+          flex \
+          libssl-dev \
+          device-tree-compiler \
+          bc \
+          rsync \
+          cpio \
+          unzip \
+          file \
+          wget \
+          zstd \
+          gcc-aarch64-linux-gnu
+
+          ln -sf /usr/bin/python3 /usr/bin/python
+
+          echo "Python version:"
+          python --version
+  
+          # Clean unnecessary repositories/directories
+          rm -rf /etc/apt/sources.list.d/*
+          rm -rf /usr/share/dotnet
+          rm -rf /usr/local/lib/android
+          rm -rf /opt/ghc
+
+          apt-get update -qq
+
+          # Install project dependencies
+          apt-get install -y -qq $(curl -fsSL git.io/depends-ubuntu-2004)
+
+          ##------Build Prepare------
+          apt-get install -y -qq gcc-aarch64-linux-gnu
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          ##-------------------------
+
+          # Cleanup
+          apt-get autoremove -y --purge
+          apt-get clean
+          rm -rf /var/lib/apt/lists/*
+
+          # Create work directory
+          mkdir -p /workdir
+          chown "$USER":"$GROUPS" /workdir || true
+
+          # Check environment
+          echo "===== Ubuntu version ====="
+          cat /etc/os-release
+
+          echo "===== GCC ====="
+          aarch64-linux-gnu-gcc --version
+
+          echo "===== CROSS_COMPILE ====="
+          echo "$CROSS_COMPILE"
 
       - name: Télécharger les sources U-Boot
         working-directory: /workdir
