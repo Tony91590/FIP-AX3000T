@@ -1,4 +1,4 @@
-name: Xiaomi-AX3000T-FIP-hanwckf
+name: Xiaomi-AX3000T-FIP-BL2-hanwckf
 
 on:
   repository_dispatch:
