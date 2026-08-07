@@ -19,7 +19,7 @@ env:
   UPLOAD_RELEASE: true
   TZ: Europe/Paris
 
- OPENWRT_NAME: hanwckf
+  OPENWRT_NAME: hanwckf
   DEVICE_NAME: xiaomi_ax3000t-fip
 
 permissions:
