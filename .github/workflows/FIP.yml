@@ -1,4 +1,4 @@
-name: Xiaomi-AX3000T-FIP-BL2-hanwckf
+name: Xiaomi-AX3000T-FIP-hanwckf
 
 on:
   repository_dispatch:
@@ -20,7 +20,7 @@ env:
   TZ: Europe/Paris
 
   OPENWRT_NAME: hanwckf
-  DEVICE_NAME: xiaomi_ax3000t-fip-bl2
+  DEVICE_NAME: xiaomi_ax3000t-fip
 
 permissions:
   contents: write
@@ -155,7 +155,7 @@ jobs:
           echo "release_tag=${{ env.FILE_DATE }}-${{ env.OPENWRT_NAME }}-${{ env.DEVICE_NAME }}" >> $GITHUB_OUTPUT
 
           cat > release.txt << EOF
-          xiaomi AX3000T FIP U-Boot BL2 ATF
+          xiaomi AX3000T FIP U-Boot
 
           Date de compilation :
           ${{ env.FILE_DATE }}
