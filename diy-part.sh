@@ -2,8 +2,8 @@
 
 BUILD_SH="build.sh"
 
-UBOOT_SEL=2
-ATF_SEL=3
+UBOOT_SEL=3
+ATF_SEL=5
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
@@ -16,6 +16,7 @@ case $ATF_SEL in
     2) ATF="atf-20231013-0ea67d76a" ;;
     3) ATF="atf-20240117-bacca82a8" ;;
     4) ATF="atf-20250711" ;;
+	5) ATF="atf-20260123" ;;
 esac
 
 sed -i -E "s|^[# ]*UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
@@ -23,6 +24,10 @@ sed -i -E "s|^[# ]*ATF_DIR=.*|ATF_DIR=$ATF|" "$BUILD_SH"
 
 git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/atf-20231013-0ea67d76a ./
+rm -rf tmp_imm
+
+git clone -b master https://github.com/Yuzhii0718/bl-mt798x-dhcpd.git tmp_imm
+cp -r tmp_imm/atf-20260123 ./
 rm -rf tmp_imm
 
 PATCH_FILE="$GITHUB_WORKSPACE/diff.patch"
