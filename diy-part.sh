@@ -26,7 +26,7 @@ git clone -b 2023 https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/atf-20231013-0ea67d76a ./
 rm -rf tmp_imm
 
-git clone -b master https://github.com/Yuzhii0718/bl-mt798x-dhcpd.git tmp_imm
+git clone -b master https://github.com/Tony91590/bl-mt798x-dhcpd.git tmp_imm
 cp -r tmp_imm/atf-20260123 ./
 rm -rf tmp_imm
 
