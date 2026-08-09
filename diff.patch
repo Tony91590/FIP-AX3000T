@@ -135,7 +135,7 @@
 +	mmio_clrbits_32(ARMPLL_CON1, ARMPLL_CON1_ALL0); // clear all armpll_con1
 +	readreg = mmio_read_32(ARMPLL_CON1); //read con1
 +	NOTICE("CON1 should 0 actual %X",readreg); //print con1
-+	mmio_write_32(ARMPLL_CON1, 0x52000000);
++	mmio_write_32(ARMPLL_CON1, 0x55000000);
 +	mmio_clrbits_32(ARMPLL_CON0 , DIVIDE_RATIO_BIT4); 
 +	
 +	
@@ -165,7 +165,7 @@
 -	//mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
 +	readreg = mmio_read_32(ARMPLL_CON1); //read con1
 +	NOTICE("CON1 should 0 actual %X",readreg); //print con1
-+	mmio_write_32(ARMPLL_CON1, 0x52000000); 
++	mmio_write_32(ARMPLL_CON1, 0x55000000); 
 +	mmio_setbits_32(ARMPLL_CON0, 0x104); 
  
 -	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
