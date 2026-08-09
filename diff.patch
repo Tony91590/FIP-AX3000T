@@ -142,15 +142,6 @@
  	mmio_setbits_32(ARMPLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(NET2PLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(MMPLL_PWR_CON0, CON0_PWR_ON);
-@@ -80,7 +86,7 @@
- 	mmio_setbits_32(NET1PLL1_PWR_CON0, CON0_PWR_ON);
- 	mmio_setbits_32(APLL2_PWR_CON0, CON0_PWR_ON);
- 	mmio_setbits_32(MPLL_PWR_CON0, CON0_PWR_ON);
--
-+	
- 	udelay(1);
- 
- 	/* Disable PLL ISO */
 @@ -92,13 +98,18 @@
  	mmio_clrbits_32(NET1PLL1_PWR_CON0, CON0_ISO_EN);
  	mmio_clrbits_32(APLL2_PWR_CON0, CON0_ISO_EN);
@@ -173,16 +164,6 @@
  
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
-@@ -126,7 +137,7 @@
- 	mmio_setbits_32(WEDMCUPLL_CON0, 0x00800000);
- 	mmio_setbits_32(NET1PLL1_CON0, 0x00800000);
- 	mmio_setbits_32(MPLL_CON0, 0x00800000);
--
-+	
- 	/* Enable Infra bus divider */
- 	if (skip_dcm_setting == 0) {
- 		mmio_setbits_32(VDNR_DCM_TOP_INFRA_CTRL_0, 0x2);
-   
 ===================================================================
 --- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.h
 +++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.h
