@@ -123,6 +123,8 @@
  CONFIG_BGA=y
  CONFIG_LOG_LEVEL_INFO=y
 ===================================================================
-
+--- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
++++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
 ===================================================================
-
+--- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.h
++++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.h
