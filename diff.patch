@@ -124,7 +124,7 @@
  CONFIG_LOG_LEVEL_INFO=y
 ===================================================================
 --- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c	
++++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
 @@ -70,8 +70,14 @@
  
  void mtk_pll_init(int skip_dcm_setting)
