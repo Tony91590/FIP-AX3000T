@@ -11,7 +11,7 @@ on:
 
 env:
   REPO_URL: https://github.com/Tony91590/bl-mt798x-dhcpd
-  REPO_BRANCH: Gl
+  REPO_BRANCH: GL
   REPO_COMMIT:
   DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
