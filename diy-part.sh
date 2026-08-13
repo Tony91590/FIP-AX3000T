@@ -17,7 +17,7 @@ rm -f uboot-mtk-20250711/cmd/glbtn.c.orig
 # 4 = 1640MHz 0x52000000
 # 5 = 1700MHz 0x55000000
 
-FREQ_SELECT=5
+FREQ_SELECT=4
 
 
 case "$FREQ_SELECT" in
