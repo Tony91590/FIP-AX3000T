@@ -58,6 +58,7 @@ jobs:
             bison \
             flex \
             libssl-dev \
+            xxd \
             device-tree-compiler \
             bc \
             rsync \
