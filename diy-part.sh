@@ -4,6 +4,7 @@ PATCH_FILE="$GITHUB_WORKSPACE/diff.patch"
 patch -p1 < "$PATCH_FILE"
 
 rm -f uboot-mtk-20250711/arch/arm/dts/mt7981-ax3000t.dts.orig
+rm -f uboot-mtk-20250711/cmd/glbtn.c.orig
 
 # =====================================
 # Sélection de la fréquence ARMPLL
