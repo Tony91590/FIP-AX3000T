@@ -126,7 +126,6 @@ jobs:
           BOARD=xiaomi_ax3000t \
           VERSION=2025 \
           MULTI_LAYOUT=1 \
-          FSTHEME=gl \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
