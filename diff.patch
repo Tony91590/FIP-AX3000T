@@ -1,117 +1,113 @@
---- a/uboot-mtk-20220606/cmd/glbtn.c
-+++ b/uboot-mtk-20220606/cmd/glbtn.c
-@@ -49,8 +49,14 @@
- static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+--- a/plat/mediatek/mt7981/drivers/pll/pll.c
++++ b/plat/mediatek/mt7981/drivers/pll/pll.c
+@@ -18,6 +18,22 @@
+ #define ACLKEN_DIV  			0x10400640
+ #define BUS_PLL_DIVIDER 		0x104007c0
+ 
++#ifndef MT7981_ARMPLL_FREQ_MHZ
++#define MT7981_ARMPLL_FREQ_MHZ		1600U
++#endif
++
++#define ARMPLL_FREQ_STEP_MHZ		20U
++#define ARMPLL_CON1_FROM_MHZ(_mhz)	(((uint32_t)(_mhz) / ARMPLL_FREQ_STEP_MHZ) << 24)
++
++#if (MT7981_ARMPLL_FREQ_MHZ != 1300U) && \
++	(MT7981_ARMPLL_FREQ_MHZ != 1400U) && \
++	(MT7981_ARMPLL_FREQ_MHZ != 1500U) && \
++	(MT7981_ARMPLL_FREQ_MHZ != 1600U) && \
++	(MT7981_ARMPLL_FREQ_MHZ != 1700U) && \
++	(MT7981_ARMPLL_FREQ_MHZ != 1800U)
++#error "MT7981_ARMPLL_FREQ_MHZ must be one of: 1300, 1400, 1500, 1600, 1700, 1800"
++#endif
++
+ static unsigned int _mtk_get_cpu_freq(uint32_t valid)
  {
- 	const char *button_label = NULL;
--	int ret, counter = 0;
--	struct udevice *dev;
-+	char buttons[128];
-+	char *name;
-+	struct udevice *dev[2];
-+	int btn_count = 0;
-+	int ret;
-+	int counter = 0;
-+	int i;
-+	int pressed;
- 	ulong ts;
-
- 	led_control("ledblink", "blink_led", "250");
-@@ -58,34 +64,70 @@
- 	gpio_power_clr();
-
- 	button_label = env_get("glbtn_key");
- 	if (!button_label)
--		button_label = "reset";
-+		button_label = "reset,mesh";
-+
-+	strncpy(buttons, button_label, sizeof(buttons) - 1);
-+	buttons[sizeof(buttons) - 1] = '\0';
-+
-+	name = strtok(buttons, ",");
-+
-+	while (name && btn_count < 2) {
-+
-+		ret = button_get_by_label(name, &dev[btn_count]);
-+
-+		if (!ret)
-+			btn_count++;
-+
-+		name = strtok(NULL, ",");
-+	}
-
--	ret = button_get_by_label(button_label, &dev);
--	if (ret) {
--		printf("Button '%s' not found (err=%d)\n", button_label, ret);
-+	if (!btn_count) {
-+		printf("Buttons '%s' not found\n", button_label);
- 		return CMD_RET_FAILURE;
- 	}
-
--	if (!button_get_state(dev)) {
-+	pressed = 0;
-+
-+	for (i = 0; i < btn_count; i++) {
-+		if (button_get_state(dev[i])) {
-+			pressed = 1;
-+			break;
-+		}
-+	}
-+
-+	if (!pressed) {
- 		poller_async_register(&led_p, "led_pa");
- 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
- 		return CMD_RET_SUCCESS;
- 	}
-
- 	led_control("ledblink", "blink_led", "500");
-
--	printf("RESET button is pressed for: %2d second(s)", counter++);
-+	printf("BUTTON is pressed for: %2d second(s)", counter++);
-
- 	ts = get_timer(0);
-
--	while (button_get_state(dev) && counter < 4) {
-+	while (counter < 4) {
-+
-+		pressed = 0;
-+
-+		for (i = 0; i < btn_count; i++) {
-+			if (button_get_state(dev[i])) {
-+				pressed = 1;
-+				break;
-+			}
-+		}
-+
-+		if (!pressed)
-+			break;
-+
- 		if (get_timer(ts) < 1000)
- 			continue;
-
- 		ts = get_timer(0);
-
- 		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
- 	}
-
- 	printf("\n");
-===================================================================
---- a/uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts
-+++ b/uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts
-@@ -40,13 +40,6 @@
- 			mtdids = "nmbm0=nmbm0";
- 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
- 		};
+ 	unsigned int temp, clk26cali_0, clk_cfg_9, clk_misc_cfg_1;
+@@ -54,18 +70,27 @@ static unsigned int _mtk_get_cpu_freq(uint32_t valid)
+ 
+ unsigned int mtk_get_cpu_freq()
+ {
+-	unsigned int ret1, ret2;
 -
--		layout@2 {
--			label = "qwrt";
--			// mtd layout for lean qwrt
--			mtdids = "nmbm0=nmbm0";
--			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
--		};
- 	};
-
- 	gpio-keys {
+-	ret1 =  _mtk_get_cpu_freq(0x28A);
+-	ret2 =  _mtk_get_cpu_freq(0x1F4);
+-	if ((ret1 == 0) && (ret2 == 0)) {
+-		NOTICE("measure value is unexpected\n");
+-		return 0;
+-	} else if (ret1 > 0) {
+-		return ret1 * 2;
+-	} else {
+-		return ret2 * 2;
+-	}
++	unsigned int ret;
++	unsigned int valid;
++
++	/* Try configured target first. Frequency meter returns roughly Fcpu/2 (MHz). */
++	valid = MT7981_ARMPLL_FREQ_MHZ / 2U;
++	ret = _mtk_get_cpu_freq(valid);
++	if (ret > 0U)
++		return ret * 2U;
++
++	/* Legacy fallbacks for old boot flows */
++	ret = _mtk_get_cpu_freq(0x28A); /* 1300/2 */
++	if (ret > 0U)
++		return ret * 2U;
++
++	ret = _mtk_get_cpu_freq(0x1F4); /* 1000/2 */
++	if (ret > 0U)
++		return ret * 2U;
++
++	NOTICE("Warning: measure value is unexpected\n");
++	NOTICE("Warning: OC may be unstable\n");
++	return 0;
+ }
+ 
+ void mtk_pll_init(int skip_dcm_setting)
+@@ -93,12 +118,40 @@ void mtk_pll_init(int skip_dcm_setting)
+ 	mmio_clrbits_32(APLL2_PWR_CON0, CON0_ISO_EN);
+ 	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
+ 
+-	/* Set PLL frequency */
+-	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
++	NOTICE("MT7981 build cfg: MT7981_ARMPLL_FREQ_MHZ=%u\n",
++		MT7981_ARMPLL_FREQ_MHZ);
+ 
+-	//mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
++	/* Set PLL frequency */
++	if (MT7981_ARMPLL_FREQ_MHZ == 1300U) {
++		/* 1.3GHz: postdiv /2, PCW=0x82 */
++		mmio_write_32(ARMPLL_CON1, 0x82000000);
++		mmio_clrbits_32(ARMPLL_CON0, 0x70);
++		mmio_setbits_32(ARMPLL_CON0, 0x114);
++	} else {
++		/*
++		 * MT7981 ARMPLL (this code path) uses integer PCW in ARMPLL_CON1[31:24].
++		 * Effective formula here:
++		 *   Fcpu(MHz) = 20 * PCW / postdiv
++		 * For 1.4~1.8GHz we force postdiv=/1, so:
++		 *   PCW = Fcpu(MHz) / 20
++		 * Examples:
++		 *   1400MHz -> PCW=0x46 -> ARMPLL_CON1=0x46000000
++		 *   1500MHz -> PCW=0x4B -> ARMPLL_CON1=0x4B000000
++		 *   1600MHz -> PCW=0x50 -> ARMPLL_CON1=0x50000000
++		 *   1700MHz -> PCW=0x55 -> ARMPLL_CON1=0x55000000
++		 *   1800MHz -> PCW=0x5A -> ARMPLL_CON1=0x5A000000
++		 *
++		 * Note: the "/32" fractional formula applies to a different full-PCW
++		 * encoding scheme, not to this top-8-bit integer programming method.
++		 */
++		mmio_write_32(ARMPLL_CON1, ARMPLL_CON1_FROM_MHZ(MT7981_ARMPLL_FREQ_MHZ));
++		mmio_clrbits_32(ARMPLL_CON0, 0x70);
++		mmio_setbits_32(ARMPLL_CON0, 0x104);
++	}
+ 
+-	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
++	NOTICE("MT7981 ARMPLL_CON1=0x%x (%u MHz)\n",
++		mmio_read_32(ARMPLL_CON1), MT7981_ARMPLL_FREQ_MHZ);
++	NOTICE("MT7981 ARMPLL_CON0=0x%x\n", mmio_read_32(ARMPLL_CON0));
+ 
+ 	mmio_setbits_32(NET2PLL_CON0, 0x114);
+ 	mmio_setbits_32(MMPLL_CON0, 0x124);
 ===================================================================
 --- a/uboot-mtk-20230718-09eda825/cmd/glbtn.c
 +++ b/uboot-mtk-20230718-09eda825/cmd/glbtn.c
@@ -227,147 +223,3 @@
  	};
 
  	gpio-keys {
-===================================================================
---- a/uboot-mtk-20250711/cmd/glbtn.c
-+++ b/uboot-mtk-20250711/cmd/glbtn.c
-@@ -49,8 +49,14 @@
- static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
- {
- 	const char *button_label = NULL;
--	int ret, counter = 0;
--	struct udevice *dev;
-+	char buttons[128];
-+	char *name;
-+	struct udevice *dev[2];
-+	int btn_count = 0;
-+	int ret;
-+	int counter = 0;
-+	int i;
-+	int pressed;
- 	ulong ts;
-
- 	led_control("ledblink", "blink_led", "250");
-@@ -58,34 +64,70 @@
- 	gpio_power_clr();
-
- 	button_label = env_get("glbtn_key");
- 	if (!button_label)
--		button_label = "reset";
-+		button_label = "reset,mesh";
-+
-+	strncpy(buttons, button_label, sizeof(buttons) - 1);
-+	buttons[sizeof(buttons) - 1] = '\0';
-+
-+	name = strtok(buttons, ",");
-+
-+	while (name && btn_count < 2) {
-+
-+		ret = button_get_by_label(name, &dev[btn_count]);
-+
-+		if (!ret)
-+			btn_count++;
-+
-+		name = strtok(NULL, ",");
-+	}
-
--	ret = button_get_by_label(button_label, &dev);
--	if (ret) {
--		printf("Button '%s' not found (err=%d)\n", button_label, ret);
-+	if (!btn_count) {
-+		printf("Buttons '%s' not found\n", button_label);
- 		return CMD_RET_FAILURE;
- 	}
-
--	if (!button_get_state(dev)) {
-+	pressed = 0;
-+
-+	for (i = 0; i < btn_count; i++) {
-+		if (button_get_state(dev[i])) {
-+			pressed = 1;
-+			break;
-+		}
-+	}
-+
-+	if (!pressed) {
- 		poller_async_register(&led_p, "led_pa");
- 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
- 		return CMD_RET_SUCCESS;
- 	}
-
- 	led_control("ledblink", "blink_led", "500");
-
--	printf("RESET button is pressed for: %2d second(s)", counter++);
-+	printf("BUTTON is pressed for: %2d second(s)", counter++);
-
- 	ts = get_timer(0);
-
--	while (button_get_state(dev) && counter < 4) {
-+	while (counter < 4) {
-+
-+		pressed = 0;
-+
-+		for (i = 0; i < btn_count; i++) {
-+			if (button_get_state(dev[i])) {
-+				pressed = 1;
-+				break;
-+			}
-+		}
-+
-+		if (!pressed)
-+			break;
-+
- 		if (get_timer(ts) < 1000)
- 			continue;
-
- 		ts = get_timer(0);
-
- 		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
- 	}
-
- 	printf("\n");
-===================================================================
---- a/uboot-mtk-20250711/arch/arm/dts/mt7981-ax3000t.dts
-+++ b/uboot-mtk-20250711/arch/arm/dts/mt7981-ax3000t.dts
-@@ -40,13 +40,6 @@
- 			mtdids = "nmbm0=nmbm0";
- 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
- 		};
--
--		layout@2 {
--			label = "qwrt";
--			// mtd layout for lean qwrt
--			mtdids = "nmbm0=nmbm0";
--			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
--		};
- 	};
-
- 	gpio-keys {
-===================================================================
---- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
-@@ -94,11 +94,20 @@ void mtk_pll_init(int skip_dcm_setting)
- 	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
- 
- 	/* Set PLL frequency */
--	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
--
--	//mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
--
--	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	// 251218: overclock hack
-+	NOTICE("THIS IS AN OVERCLOKING BL2!\n");
-+	NOTICE("set arm freq to 1.60 GHz:\n");
-+
-+	// mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
-+	mmio_write_32(ARMPLL_CON1, 0x50000000); /* 1.6G */
-+	// mmio_write_32(ARMPLL_CON1, 0x55000000); /* 1.7G */
-+	NOTICE("ARMPLL_CON1 = 0x%x\n", mmio_read_32(ARMPLL_CON1));
-+
-+	// mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
-+	// mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	mmio_clrbits_32(ARMPLL_CON0, 0x70); /* divider for >1.3G */
-+	mmio_setbits_32(ARMPLL_CON0, 0x104);
-+	NOTICE("ARMPLL_CON0 = 0x%x\n", mmio_read_32(ARMPLL_CON0));
- 
- 	mmio_setbits_32(NET2PLL_CON0, 0x114);
- 	mmio_setbits_32(MMPLL_CON0, 0x124);
