@@ -142,7 +142,7 @@
  	mmio_setbits_32(ARMPLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(NET2PLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(MMPLL_PWR_CON0, CON0_PWR_ON);
-@@ -92,13 +98,18 @@
+@@ -92,13 +98,17 @@
  	mmio_clrbits_32(NET1PLL1_PWR_CON0, CON0_ISO_EN);
  	mmio_clrbits_32(APLL2_PWR_CON0, CON0_ISO_EN);
  	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
@@ -159,7 +159,7 @@
 +	mmio_setbits_32(ARMPLL_CON0, 0x104); 
  
 -	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+
++		
  
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
