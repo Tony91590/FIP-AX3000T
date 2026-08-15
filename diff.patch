@@ -40,8 +40,8 @@
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
 ===================================================================
---- a/atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.h
-+++ b/atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.h
+--- a/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.h
++++ b/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.h
 @@ -64,7 +64,8 @@
  #define CON0_POST_DIV(x)	((x) << 1)
  #define CON1_PCW_CHG		BIT(31)
@@ -95,8 +95,8 @@
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
 ===================================================================
---- a/atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.h
-+++ b/atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.h
+--- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
++++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h
 @@ -64,7 +64,8 @@
  #define CON0_POST_DIV(x)	((x) << 1)
  #define CON1_PCW_CHG		BIT(31)
