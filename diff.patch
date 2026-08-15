@@ -51,7 +51,6 @@
 +#define ARMPLL_CON1_ALL0	0xFF000000
  #define SCP_AXICK_DCM_DIS_EN	BIT(0)
  #define SCP_AXICK_26M_SEL_EN	BIT(4)
-
 ===================================================================
 --- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
 +++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
@@ -106,7 +105,6 @@
 +#define ARMPLL_CON1_ALL0	0xFF000000
  #define SCP_AXICK_DCM_DIS_EN	BIT(0)
  #define SCP_AXICK_26M_SEL_EN	BIT(4)
-
 ===================================================================
 --- a/uboot-mtk-20220606/cmd/glbtn.c
 +++ b/uboot-mtk-20220606/cmd/glbtn.c
