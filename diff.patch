@@ -137,8 +137,8 @@
 +	NOTICE("CON1 should 0 actual %X",readreg); //print con1
 +	mmio_write_32(ARMPLL_CON1, 0x50000000);
 +	mmio_clrbits_32(ARMPLL_CON0 , DIVIDE_RATIO_BIT4); 
-+	
-+	
++
++
  	mmio_setbits_32(ARMPLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(NET2PLL_PWR_CON0, CON0_PWR_ON);
  	mmio_setbits_32(MMPLL_PWR_CON0, CON0_PWR_ON);
