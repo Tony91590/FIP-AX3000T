@@ -10,8 +10,8 @@ on:
         default: "false"
 
 env:
-  REPO_URL: https://github.com/hanwckf/bl-mt798x
-  REPO_BRANCH: master
+  REPO_URL: https://github.com/Tony91590/bl-mt798x
+  REPO_BRANCH: oc
   REPO_COMMIT: 
   DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
