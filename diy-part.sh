@@ -7,12 +7,10 @@ ATF_SEL=1
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
-    2) UBOOT="uboot-mtk-20230718-09eda825" ;;
 esac
 
 case $ATF_SEL in
     1) ATF="atf-20220606-637ba581b" ;;
-    2) ATF="atf-20240117-bacca82a8" ;;
 esac
 
 sed -i -E "s|^[# ]*UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
@@ -23,11 +21,4 @@ patch -p1 < "$PATCH_FILE"
 
 rm -f uboot-mtk-20220606/cmd/glbtn.c.orig
 rm -f uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts.orig
-rm -f uboot-mtk-20230718-09eda825/cmd/glbtn.c.orig
-rm -f uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts.orig
-rm -f atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c.orig
-rm -f atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.c.orig
-rm -f atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.h.orig
-rm -f atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.h.orig
 rm -f atf-20220606-637ba581b/configs/mt7981_ax3000t_defconfig.orig
-
