@@ -3,7 +3,7 @@
 BUILD_SH="build.sh"
 
 UBOOT_SEL=3
-ATF_SEL=6
+ATF_SEL=5
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
