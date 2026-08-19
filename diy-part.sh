@@ -12,6 +12,7 @@ esac
 
 case $ATF_SEL in
     1) ATF="atf-20220606-637ba581b" ;;
+    2) ATF="atf-20231013-0ea67d76a" ;;
 esac
 
 sed -i -E "s|^[# ]*UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
