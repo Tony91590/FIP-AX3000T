@@ -2,8 +2,8 @@
 
 BUILD_SH="build.sh"
 
-UBOOT_SEL=3
-ATF_SEL=5
+UBOOT_SEL=1
+ATF_SEL=1
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
@@ -52,7 +52,7 @@ rm -f atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c.orig
 # 4 = 1640MHz 0x52000000
 # 5 = 1700MHz 0x55000000
 
-FREQ_SELECT=2
+FREQ_SELECT=1
 
 
 case "$FREQ_SELECT" in
