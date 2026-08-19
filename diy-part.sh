@@ -7,6 +7,7 @@ ATF_SEL=1
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
+    2) UBOOT="uboot-mtk-20230718-09eda825" ;;
 esac
 
 case $ATF_SEL in
