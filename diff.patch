@@ -227,13 +227,3 @@
  	};
 
  	gpio-keys {
-===================================================================
---- a/atf-20220606-637ba581b/configs/mt7981_ax3000t_defconfig
-+++ b/atf-20220606-637ba581b/configs/mt7981_ax3000t_defconfig
-@@ -1,5 +1,5 @@
- CONFIG_PLAT_MT7981=y
--CONFIG_TARGET_FIP_NO_SEC_BOOT=y
-+CONFIG_TARGET_ALL_NO_SEC_BOOT=y
- CONFIG_FLASH_DEVICE_SPIM_NAND=y
- CONFIG_BGA=y
- CONFIG_LOG_LEVEL_INFO=y
