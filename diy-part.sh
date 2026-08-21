@@ -2,7 +2,7 @@
 
 BUILD_SH="build.sh"
 
-UBOOT_SEL=1
+UBOOT_SEL=2
 ATF_SEL=3
 
 case $UBOOT_SEL in
