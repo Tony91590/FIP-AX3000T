@@ -1,5 +1,11 @@
 # diy ATF and u-boot for xiaomi ax3000t based on mt798x
 
+rm -f build.sh
+
+git clone -b test https://github.com/Tony91590/bl-mt798x.git tmp_imm
+cp -r tmp_imm/build.sh ./
+rm -rf tmp_imm
+
 BUILD_SH="build.sh"
 
 UBOOT_SEL=2
