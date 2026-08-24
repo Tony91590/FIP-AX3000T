@@ -8,10 +8,14 @@ rm -rf tmp_imm
 
 rm -rf uboot-mtk-20230718-09eda825
 
+git clone -b new https://github.com/Tony91590/bl-mt798x-dhcpd.git tmp_imm
+cp -r tmp_imm/uboot-mtk-20230718-09eda825 ./
+rm -rf tmp_imm
+
 BUILD_SH="build.sh"
 
 UBOOT_SEL=2
-ATF_SEL=2
+ATF_SEL=3
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
