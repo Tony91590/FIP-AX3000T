@@ -6,6 +6,8 @@ git clone -b test https://github.com/Tony91590/bl-mt798x.git tmp_imm
 cp -r tmp_imm/build.sh ./
 rm -rf tmp_imm
 
+rm -rf uboot-mtk-20230718-09eda825
+
 BUILD_SH="build.sh"
 
 UBOOT_SEL=2
