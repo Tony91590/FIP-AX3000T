@@ -141,7 +141,7 @@
  	mmio_setbits_32(MMPLL_CON0, 0x124);
 --- a/uboot-mtk-20230718-09eda825/failsafe/fsdata/flashing.html
 +++ b/uboot-mtk-20230718-09eda825/failsafe/fsdata/flashing.html
-  @@ -20,7 +20,7 @@
+@@ -20,7 +20,7 @@
  						document.getElementById('title').innerHTML = 'UPDATE COMPLETED'
  						document.getElementById('info').innerHTML = 'Your device was successfully updated! Now rebooting...'
  					},
