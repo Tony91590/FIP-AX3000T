@@ -144,7 +144,7 @@ jobs:
 
           echo "Compilation avec $(nproc) threads"
 
-          SOC=mt7981 BOARD=ax3000t MULTI_LAYOUT=1 ./build.sh
+          SOC=mt7986 BOARD=redmi_ax6000 MULTI_LAYOUT=1 ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
           echo "status=success" >> $GITHUB_OUTPUT
