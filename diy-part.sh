@@ -3,7 +3,7 @@
 BUILD_SH="build.sh"
 
 UBOOT_SEL=1
-ATF_SEL=3
+ATF_SEL=1
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
@@ -12,8 +12,7 @@ esac
 
 case $ATF_SEL in
     1) ATF="atf-20220606-637ba581b" ;;
-    2) ATF="atf-20231013-0ea67d76a" ;;
-    3) ATF="atf-20240117-bacca82a8" ;;
+    2) ATF="atf-20240117-bacca82a8" ;;
 esac
 
 sed -i -E "s|^[# ]*UBOOT_DIR=.*|UBOOT_DIR=$UBOOT|" "$BUILD_SH"
