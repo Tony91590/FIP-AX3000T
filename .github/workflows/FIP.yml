@@ -125,7 +125,7 @@ jobs:
           SOC=mt7981 \
           BOARD=xiaomi_ax3000t \
           VERSION=2025 \
-          MULTI_LAYOUT=1 \
+          VARIANT=ubootmod \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
