@@ -1,68 +1,97 @@
---- a/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20260123/plat/mediatek/mt7981/drivers/pll/pll.c
-@@ -94,11 +94,20 @@ void mtk_pll_init(int skip_dcm_setting)
- 	mmio_clrbits_32(MPLL_PWR_CON0, CON0_ISO_EN);
- 
- 	/* Set PLL frequency */
--	mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
--
--	//mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
--
--	mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	// 251218: overclock hack
-+	NOTICE("THIS IS AN OVERCLOKING BL2!\n");
-+	NOTICE("set arm freq to 1.60 GHz:\n");
+--- a/uboot-mtk-20250711/cmd/glbtn.c
++++ b/uboot-mtk-20250711/cmd/glbtn.c
+@@ -49,8 +49,14 @@
+ static int do_glbtn(struct cmd_tbl *cmdtp, int flag, int argc, char *const argv[])
+ {
+ 	const char *button_label = NULL;
+-	int ret, counter = 0;
+-	struct udevice *dev;
++	char buttons[128];
++	char *name;
++	struct udevice *dev[2];
++	int btn_count = 0;
++	int ret;
++	int counter = 0;
++	int i;
++	int pressed;
+ 	ulong ts;
+
+ 	led_control("ledblink", "blink_led", "250");
+@@ -58,34 +64,70 @@
+ 	gpio_power_clr();
+
+ 	button_label = env_get("glbtn_key");
+ 	if (!button_label)
+-		button_label = "reset";
++		button_label = "reset,mesh";
 +
-+	// mmio_write_32(ARMPLL_CON1, 0x82000000); /* 1.3G */
-+	mmio_write_32(ARMPLL_CON1, 0x50000000); /* 1.6G */
-+	// mmio_write_32(ARMPLL_CON1, 0x55000000); /* 1.7G */
-+	NOTICE("ARMPLL_CON1 = 0x%x\n", mmio_read_32(ARMPLL_CON1));
++	strncpy(buttons, button_label, sizeof(buttons) - 1);
++	buttons[sizeof(buttons) - 1] = '\0';
 +
-+	// mmio_setbits_32(ARMPLL_CON0, 0x124); /* divider for 650M */
-+	// mmio_setbits_32(ARMPLL_CON0, 0x114); /* divider for 1.3G */
-+	mmio_clrbits_32(ARMPLL_CON0, 0x70); /* divider for >1.3G */
-+	mmio_setbits_32(ARMPLL_CON0, 0x104);
-+	NOTICE("ARMPLL_CON0 = 0x%x\n", mmio_read_32(ARMPLL_CON0));
- 
- 	mmio_setbits_32(NET2PLL_CON0, 0x114);
- 	mmio_setbits_32(MMPLL_CON0, 0x124);
---- a/uboot-mtk-20250711/arch/arm/dts/mt7981-xiaomi-ax3000t.dts
-+++ b/uboot-mtk-20250711/arch/arm/dts/mt7981-xiaomi-ax3000t.dts
-@@ -40,13 +40,6 @@
- 			mtdids = "nmbm0=nmbm0";
- 			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),112m(ubi),256k(KF)";
- 		};
--
--		layout@2 {
--			label = "qwrt";
--			// mtd layout for lean qwrt
--			mtdids = "nmbm0=nmbm0";
--			mtdparts = "nmbm0:1024k(bl2),256k(Nvram),256k(Bdata),2048k(factory),2048k(fip),256k(crash),256k(crash_log),100m(ubi),12m(data),256k(KF)";
--		};
- 	};
++	name = strtok(buttons, ",");
++
++	while (name && btn_count < 2) {
++
++		ret = button_get_by_label(name, &dev[btn_count]);
++
++		if (!ret)
++			btn_count++;
++
++		name = strtok(NULL, ",");
++	}
 
- 	gpio-keys {
-===================================================================
---- a/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20240117-bacca82a8/plat/mediatek/mt7981/drivers/pll/pll.c
-@@ -19,7 +19,7 @@
- #define BUS_PLL_DIVIDER 		0x104007c0
+-	ret = button_get_by_label(button_label, &dev);
+-	if (ret) {
+-		printf("Button '%s' not found (err=%d)\n", button_label, ret);
++	if (!btn_count) {
++		printf("Buttons '%s' not found\n", button_label);
+ 		return CMD_RET_FAILURE;
+ 	}
 
- #ifndef MT7981_ARMPLL_FREQ_MHZ
--#define MT7981_ARMPLL_FREQ_MHZ		1300U
-+#define MT7981_ARMPLL_FREQ_MHZ		1600U
- #endif
+-	if (!button_get_state(dev)) {
++	pressed = 0;
++
++	for (i = 0; i < btn_count; i++) {
++		if (button_get_state(dev[i])) {
++			pressed = 1;
++			break;
++		}
++	}
++
++	if (!pressed) {
+ 		poller_async_register(&led_p, "led_pa");
+ 		poller_call_async(&led_p, 1000000, led_action_post, NULL);
+ 		return CMD_RET_SUCCESS;
+ 	}
 
- #define ARMPLL_FREQ_STEP_MHZ		20U
-===================================================================
---- a/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
-@@ -19,7 +19,7 @@
- #define BUS_PLL_DIVIDER 		0x104007c0
+ 	led_control("ledblink", "blink_led", "500");
 
- #ifndef MT7981_ARMPLL_FREQ_MHZ
--#define MT7981_ARMPLL_FREQ_MHZ		1300U
-+#define MT7981_ARMPLL_FREQ_MHZ		1600U
- #endif
+-	printf("RESET button is pressed for: %2d second(s)", counter++);
++	printf("BUTTON is pressed for: %2d second(s)", counter++);
 
- #define ARMPLL_FREQ_STEP_MHZ		20U
+ 	ts = get_timer(0);
+
+-	while (button_get_state(dev) && counter < 4) {
++	while (counter < 4) {
++
++		pressed = 0;
++
++		for (i = 0; i < btn_count; i++) {
++			if (button_get_state(dev[i])) {
++				pressed = 1;
++				break;
++			}
++		}
++
++		if (!pressed)
++			break;
++
+ 		if (get_timer(ts) < 1000)
+ 			continue;
+
+ 		ts = get_timer(0);
+
+ 		printf("\b\b\b\b\b\b\b\b\b\b\b\b%2d second(s)", counter++);
+ 	}
+
+ 	printf("\n");
