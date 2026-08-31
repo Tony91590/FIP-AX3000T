@@ -127,6 +127,7 @@ jobs:
           VERSION=2025 \
           VARIANT=ubootmod \
           FSTHEME=GL \
+          fixed-mtdparts=1 \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
