@@ -95,8 +95,8 @@
  	}
 
  	printf("\n");
---- a/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.c
-+++ b/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.c
+--- a/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
++++ b/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.c
 @@ -70,8 +70,14 @@ unsigned int mtk_get_cpu_freq()
  
  void mtk_pll_init(int skip_dcm_setting)
@@ -136,8 +136,8 @@
  
  	mmio_setbits_32(NET2PLL_CON0, 0x114);
  	mmio_setbits_32(MMPLL_CON0, 0x124);
---- a/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.h
-+++ b/atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.h
+--- a/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.h
++++ b/atf-20250711/plat/mediatek/mt7981/drivers/pll/pll.h
 @@ -64,7 +64,8 @@
  #define CON0_POST_DIV(x)	((x) << 1)
  #define CON1_PCW_CHG		BIT(31)
