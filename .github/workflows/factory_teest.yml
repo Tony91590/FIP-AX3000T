@@ -1,5 +1,5 @@
-
-name: AX3000T - Patch Factory ALL
+```yaml
+name: AX3000T - Patch Factory 2G + 5G
 
 on:
   workflow_dispatch:
@@ -31,40 +31,48 @@ jobs:
         run: |
           cat > txpwr-patcher.sh <<'SCRIPT'
           #!/bin/sh
+
           set -eu
 
           FACTORY="$1"
 
           OFFSET_2G=$((0x441))
           OFFSET_5G=$((0x445))
-          OFFSET_6G=$((0x465))
 
-          # TEST VALUES ONLY
-          # These are deliberately different from the current values
-          # to verify that the patch mechanism actually modifies the file.
-          TEST_2G="20 21 22 23"
+          # 2.4 GHz:
+          # offset 0x441
+          # 4 octets = 30 30 31 31
+          PRESET_2G="x30 x30 x31 x31"
 
-          TEST_5G="
-          20 21 22 23 24
-          20 21 22 23 24
-          20 21 22 23 24
-          20 21 22 23 24
-          "
-
-          TEST_6G="
-          20 21 22 23 24 25 26 27
-          20 21 22 23 24 25 26 27
-          20 21 22 23 24 25 26 27
-          20 21 22 23 24 25 26 27
+          # 5 GHz:
+          # offset 0x445
+          # 20 octets = 2E x20
+          PRESET_5G="
+          x2E x2E x2E x2E x2E
+          x2E x2E x2E x2E x2E
+          x2E x2E x2E x2E x2E
+          x2E x2E x2E x2E x2E
           "
 
           write_hex() {
               offset="$1"
               data="$2"
+
               tmp=$(mktemp)
 
               for byte in $data; do
-                  printf '%b' "\\$(printf '%03o' "0x$byte")" >> "$tmp"
+                  case "$byte" in
+                      x[0-9A-Fa-f][0-9A-Fa-f])
+                          hex="${byte#x}"
+                          ;;
+                      *)
+                          echo "ERROR: invalid byte: $byte"
+                          rm -f "$tmp"
+                          exit 1
+                          ;;
+                  esac
+
+                  printf '%b' "\\$(printf '%03o' "0x$hex")" >> "$tmp"
               done
 
               dd if="$tmp" \
@@ -89,49 +97,61 @@ jobs:
           }
 
           echo "=========================================="
-          echo " MT7981 AX3000T FACTORY PATCH TEST"
+          echo " MT7981 AX3000T FACTORY PATCH"
           echo "=========================================="
           echo
           echo "Factory: $FACTORY"
           echo
+          echo "Bands : 2.4 GHz + 5 GHz"
+          echo "6 GHz  : UNCHANGED"
+          echo
 
           echo "=== BEFORE ==="
           echo
-          echo "2.4 GHz:"
+          echo "2.4 GHz @ 0x441:"
           show_region "$OFFSET_2G" 4
 
-          echo "5 GHz:"
+          echo
+          echo "5 GHz @ 0x445:"
           show_region "$OFFSET_5G" 20
 
+          echo
           echo "6 GHz:"
-          show_region "$OFFSET_6G" 32
+          show_region "$((0x465))" 32
 
           echo
-          echo "=== PATCHING TEST DATA ==="
+          echo "=== PATCHING 2.4 GHz ==="
+          write_hex "$OFFSET_2G" "$PRESET_2G"
 
-          write_hex "$OFFSET_2G" "$TEST_2G"
-          write_hex "$OFFSET_5G" "$TEST_5G"
-          write_hex "$OFFSET_6G" "$TEST_6G"
+          echo
+          echo "=== PATCHING 5 GHz ==="
+          write_hex "$OFFSET_5G" "$PRESET_5G"
+
+          echo
+          echo "=== 6 GHz ==="
+          echo "UNCHANGED"
 
           echo
           echo "=== AFTER ==="
           echo
-          echo "2.4 GHz:"
+          echo "2.4 GHz @ 0x441:"
           show_region "$OFFSET_2G" 4
 
-          echo "5 GHz:"
+          echo
+          echo "5 GHz @ 0x445:"
           show_region "$OFFSET_5G" 20
 
-          echo "6 GHz:"
-          show_region "$OFFSET_6G" 32
+          echo
+          echo "6 GHz @ 0x465:"
+          show_region "$((0x465))" 32
 
           echo
-          echo "Patch script completed."
+          echo "Patch completed."
           SCRIPT
 
           chmod +x txpwr-patcher.sh
 
-      - name: Patch AX3000T
+      - name: Patch AX3000T 2G + 5G
         run: |
           set -eu
 
@@ -143,15 +163,14 @@ jobs:
           echo "=== VERIFY FILE DIFFERENCE ==="
 
           if cmp -s factory.bin factory_patched.bin; then
-            echo "ERROR: factory_patched.bin is identical to factory.bin"
-            echo "No bytes were modified."
+            echo "ERROR: no bytes changed"
             exit 1
           fi
 
-          echo "SUCCESS: factory_patched.bin is different from factory.bin"
+          echo "SUCCESS: factory_patched.bin differs from factory.bin"
 
           echo
-          echo "Changed bytes:"
+          echo "=== CHANGED BYTES ==="
           cmp -l factory.bin factory_patched.bin | head -100 || true
 
       - name: Generate SHA256
@@ -169,7 +188,7 @@ jobs:
       - name: Upload patched Factory
         uses: actions/upload-artifact@v4
         with:
-          name: AX3000T-factory-patched-TEST
+          name: AX3000T-factory-patched-2G-5G
           path: |
             factory_patched.bin
             factory_patched.bin.sha256
@@ -181,3 +200,4 @@ jobs:
           path: |
             factory.bin
             factory.bin.sha256
+```
