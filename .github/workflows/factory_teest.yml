@@ -181,4 +181,3 @@ jobs:
           path: |
             factory.bin
             factory.bin.sha256
-```
