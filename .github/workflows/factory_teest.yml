@@ -1,3 +1,4 @@
+```yaml
 name: AX3000T - Patch Factory ALL
 
 on:
@@ -16,6 +17,8 @@ jobs:
 
       - name: Check Factory
         run: |
+          set -eu
+
           test -f factory.bin || {
             echo "ERROR: factory.bin not found"
             exit 1
@@ -28,37 +31,36 @@ jobs:
         run: |
           cat > txpwr-patcher.sh <<'SCRIPT'
           #!/bin/sh
-
           set -eu
 
           FACTORY="$1"
 
-          # MT7981 / MT7915 / MT7976 V2 layout
           OFFSET_2G=$((0x441))
           OFFSET_5G=$((0x445))
           OFFSET_6G=$((0x465))
 
-          # AX3000T preset
-          PRESET_2G="28 28 29 29"
+          # TEST VALUES ONLY
+          # These are deliberately different from the current values
+          # to verify that the patch mechanism actually modifies the file.
+          TEST_2G="20 21 22 23"
 
-          PRESET_5G="
-          28 28 28 28 28
-          28 28 28 28 28
-          28 28 28 28 28
-          28 28 28 28 28
+          TEST_5G="
+          20 21 22 23 24
+          20 21 22 23 24
+          20 21 22 23 24
+          20 21 22 23 24
           "
 
-          PRESET_6G="
-          24 24 24 24 22 22 22 22
-          24 24 24 24 22 22 22 22
-          24 24 24 24 22 22 22 22
-          24 24 24 24 22 22 22 22
+          TEST_6G="
+          20 21 22 23 24 25 26 27
+          20 21 22 23 24 25 26 27
+          20 21 22 23 24 25 26 27
+          20 21 22 23 24 25 26 27
           "
 
           write_hex() {
               offset="$1"
               data="$2"
-
               tmp=$(mktemp)
 
               for byte in $data; do
@@ -87,13 +89,10 @@ jobs:
           }
 
           echo "=========================================="
-          echo " MT7981 AX3000T TX POWER PATCH"
+          echo " MT7981 AX3000T FACTORY PATCH TEST"
           echo "=========================================="
           echo
           echo "Factory: $FACTORY"
-          echo
-          echo "Preset: AX3000T"
-          echo "Bands : ALL"
           echo
 
           echo "=== BEFORE ==="
@@ -108,14 +107,11 @@ jobs:
           show_region "$OFFSET_6G" 32
 
           echo
-          echo "=== PATCHING 2.4 GHz ==="
-          write_hex "$OFFSET_2G" "$PRESET_2G"
+          echo "=== PATCHING TEST DATA ==="
 
-          echo "=== PATCHING 5 GHz ==="
-          write_hex "$OFFSET_5G" "$PRESET_5G"
-
-          echo "=== PATCHING 6 GHz ==="
-          write_hex "$OFFSET_6G" "$PRESET_6G"
+          write_hex "$OFFSET_2G" "$TEST_2G"
+          write_hex "$OFFSET_5G" "$TEST_5G"
+          write_hex "$OFFSET_6G" "$TEST_6G"
 
           echo
           echo "=== AFTER ==="
@@ -130,16 +126,33 @@ jobs:
           show_region "$OFFSET_6G" 32
 
           echo
-          echo "Patch completed successfully."
+          echo "Patch script completed."
           SCRIPT
 
           chmod +x txpwr-patcher.sh
 
-      - name: Patch AX3000T ALL
+      - name: Patch AX3000T
         run: |
+          set -eu
+
           cp factory.bin factory_patched.bin
 
           ./txpwr-patcher.sh factory_patched.bin
+
+          echo
+          echo "=== VERIFY FILE DIFFERENCE ==="
+
+          if cmp -s factory.bin factory_patched.bin; then
+            echo "ERROR: factory_patched.bin is identical to factory.bin"
+            echo "No bytes were modified."
+            exit 1
+          fi
+
+          echo "SUCCESS: factory_patched.bin is different from factory.bin"
+
+          echo
+          echo "Changed bytes:"
+          cmp -l factory.bin factory_patched.bin | head -100 || true
 
       - name: Generate SHA256
         run: |
@@ -156,7 +169,7 @@ jobs:
       - name: Upload patched Factory
         uses: actions/upload-artifact@v4
         with:
-          name: AX3000T-factory-patched-ALL
+          name: AX3000T-factory-patched-TEST
           path: |
             factory_patched.bin
             factory_patched.bin.sha256
@@ -168,3 +181,4 @@ jobs:
           path: |
             factory.bin
             factory.bin.sha256
+```
