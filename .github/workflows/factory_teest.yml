@@ -1,4 +1,4 @@
-```yaml
+
 name: AX3000T - Patch Factory 2G + 5G
 
 on:
@@ -200,4 +200,3 @@ jobs:
           path: |
             factory.bin
             factory.bin.sha256
-```
