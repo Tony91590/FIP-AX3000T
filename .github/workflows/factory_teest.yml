@@ -26,137 +26,75 @@ jobs:
           echo "Factory found:"
           ls -lh factory.bin
 
-      - name: Create patch script
-        run: |
-          cat > txpwr-patcher.sh <<'SCRIPT'
-          #!/bin/sh
-
-          set -eu
-
-          FACTORY="$1"
-
-          OFFSET_2G=$((0x441))
-          OFFSET_5G=$((0x445))
-
-          # 2.4 GHz:
-          # offset 0x441
-          # 4 octets = 30 30 31 31
-          PRESET_2G="x30 x30 x31 x31"
-
-          # 5 GHz:
-          # offset 0x445
-          # 20 octets = 2E x20
-          PRESET_5G="
-          x2E x2E x2E x2E x2E
-          x2E x2E x2E x2E x2E
-          x2E x2E x2E x2E x2E
-          x2E x2E x2E x2E x2E
-          "
-
-          write_hex() {
-              offset="$1"
-              data="$2"
-
-              tmp=$(mktemp)
-
-              for byte in $data; do
-                  case "$byte" in
-                      x[0-9A-Fa-f][0-9A-Fa-f])
-                          hex="${byte#x}"
-                          ;;
-                      *)
-                          echo "ERROR: invalid byte: $byte"
-                          rm -f "$tmp"
-                          exit 1
-                          ;;
-                  esac
-
-                  printf '%b' "\\$(printf '%03o' "0x$hex")" >> "$tmp"
-              done
-
-              dd if="$tmp" \
-                 of="$FACTORY" \
-                 bs=1 \
-                 seek="$offset" \
-                 conv=notrunc \
-                 status=none
-
-              rm -f "$tmp"
-          }
-
-          show_region() {
-              offset="$1"
-              length="$2"
-
-              hexdump -v \
-                -s "$offset" \
-                -n "$length" \
-                -e '1/1 "%02X " "\n"' \
-                "$FACTORY"
-          }
-
-          echo "=========================================="
-          echo " MT7981 AX3000T FACTORY PATCH"
-          echo "=========================================="
-          echo
-          echo "Factory: $FACTORY"
-          echo
-          echo "Bands : 2.4 GHz + 5 GHz"
-          echo "6 GHz  : UNCHANGED"
-          echo
-
-          echo "=== BEFORE ==="
-          echo
-          echo "2.4 GHz @ 0x441:"
-          show_region "$OFFSET_2G" 4
-
-          echo
-          echo "5 GHz @ 0x445:"
-          show_region "$OFFSET_5G" 20
-
-          echo
-          echo "6 GHz:"
-          show_region "$((0x465))" 32
-
-          echo
-          echo "=== PATCHING 2.4 GHz ==="
-          write_hex "$OFFSET_2G" "$PRESET_2G"
-
-          echo
-          echo "=== PATCHING 5 GHz ==="
-          write_hex "$OFFSET_5G" "$PRESET_5G"
-
-          echo
-          echo "=== 6 GHz ==="
-          echo "UNCHANGED"
-
-          echo
-          echo "=== AFTER ==="
-          echo
-          echo "2.4 GHz @ 0x441:"
-          show_region "$OFFSET_2G" 4
-
-          echo
-          echo "5 GHz @ 0x445:"
-          show_region "$OFFSET_5G" 20
-
-          echo
-          echo "6 GHz @ 0x465:"
-          show_region "$((0x465))" 32
-
-          echo
-          echo "Patch completed."
-          SCRIPT
-
-          chmod +x txpwr-patcher.sh
-
       - name: Patch AX3000T 2G + 5G
         run: |
           set -eu
 
           cp factory.bin factory_patched.bin
 
-          ./txpwr-patcher.sh factory_patched.bin
+          echo "=========================================="
+          echo " MT7981 AX3000T FACTORY PATCH"
+          echo "=========================================="
+          echo
+          echo "2.4 GHz: 0x441 -> 30 30 31 31"
+          echo "5 GHz  : 0x445 -> 20 x 2E"
+          echo "6 GHz  : UNCHANGED"
+          echo
+
+          echo "=== BEFORE ==="
+
+          echo "2.4 GHz @ 0x441:"
+          hexdump -v -s $((0x441)) -n 4 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
+
+          echo "5 GHz @ 0x445:"
+          hexdump -v -s $((0x445)) -n 20 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
+
+          echo "6 GHz @ 0x465:"
+          hexdump -v -s $((0x465)) -n 32 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
+
+          echo
+          echo "=== PATCHING 2.4 GHz ==="
+
+          printf '\x30\x30\x31\x31' |
+            dd of=factory_patched.bin \
+              bs=1 \
+              seek=$((0x441)) \
+              conv=notrunc \
+              status=none
+
+          echo
+          echo "=== PATCHING 5 GHz ==="
+
+          printf '\x2e%.0s' $(seq 1 20) |
+            dd of=factory_patched.bin \
+              bs=1 \
+              seek=$((0x445)) \
+              conv=notrunc \
+              status=none
+
+          echo
+          echo "=== AFTER ==="
+
+          echo "2.4 GHz @ 0x441:"
+          hexdump -v -s $((0x441)) -n 4 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
+
+          echo "5 GHz @ 0x445:"
+          hexdump -v -s $((0x445)) -n 20 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
+
+          echo "6 GHz @ 0x465:"
+          hexdump -v -s $((0x465)) -n 32 \
+            -e '1/1 "%02X " "\n"' \
+            factory_patched.bin
 
           echo
           echo "=== VERIFY FILE DIFFERENCE ==="
@@ -174,6 +112,8 @@ jobs:
 
       - name: Generate SHA256
         run: |
+          set -eu
+
           sha256sum factory.bin > factory.bin.sha256
           sha256sum factory_patched.bin > factory_patched.bin.sha256
 
