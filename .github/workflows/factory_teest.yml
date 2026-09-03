@@ -1,0 +1,170 @@
+name: AX3000T - Patch Factory ALL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Factory
+        run: |
+          test -f factory.bin || {
+            echo "ERROR: factory.bin not found"
+            exit 1
+          }
+
+          echo "Factory found:"
+          ls -lh factory.bin
+
+      - name: Create patch script
+        run: |
+          cat > txpwr-patcher.sh <<'SCRIPT'
+          #!/bin/sh
+
+          set -eu
+
+          FACTORY="$1"
+
+          # MT7981 / MT7915 / MT7976 V2 layout
+          OFFSET_2G=$((0x441))
+          OFFSET_5G=$((0x445))
+          OFFSET_6G=$((0x465))
+
+          # AX3000T preset
+          PRESET_2G="28 28 29 29"
+
+          PRESET_5G="
+          28 28 28 28 28
+          28 28 28 28 28
+          28 28 28 28 28
+          28 28 28 28 28
+          "
+
+          PRESET_6G="
+          24 24 24 24 22 22 22 22
+          24 24 24 24 22 22 22 22
+          24 24 24 24 22 22 22 22
+          24 24 24 24 22 22 22 22
+          "
+
+          write_hex() {
+              offset="$1"
+              data="$2"
+
+              tmp=$(mktemp)
+
+              for byte in $data; do
+                  printf '%b' "\\$(printf '%03o' "0x$byte")" >> "$tmp"
+              done
+
+              dd if="$tmp" \
+                 of="$FACTORY" \
+                 bs=1 \
+                 seek="$offset" \
+                 conv=notrunc \
+                 status=none
+
+              rm -f "$tmp"
+          }
+
+          show_region() {
+              offset="$1"
+              length="$2"
+
+              hexdump -v \
+                -s "$offset" \
+                -n "$length" \
+                -e '1/1 "%02X " "\n"' \
+                "$FACTORY"
+          }
+
+          echo "=========================================="
+          echo " MT7981 AX3000T TX POWER PATCH"
+          echo "=========================================="
+          echo
+          echo "Factory: $FACTORY"
+          echo
+          echo "Preset: AX3000T"
+          echo "Bands : ALL"
+          echo
+
+          echo "=== BEFORE ==="
+          echo
+          echo "2.4 GHz:"
+          show_region "$OFFSET_2G" 4
+
+          echo "5 GHz:"
+          show_region "$OFFSET_5G" 20
+
+          echo "6 GHz:"
+          show_region "$OFFSET_6G" 32
+
+          echo
+          echo "=== PATCHING 2.4 GHz ==="
+          write_hex "$OFFSET_2G" "$PRESET_2G"
+
+          echo "=== PATCHING 5 GHz ==="
+          write_hex "$OFFSET_5G" "$PRESET_5G"
+
+          echo "=== PATCHING 6 GHz ==="
+          write_hex "$OFFSET_6G" "$PRESET_6G"
+
+          echo
+          echo "=== AFTER ==="
+          echo
+          echo "2.4 GHz:"
+          show_region "$OFFSET_2G" 4
+
+          echo "5 GHz:"
+          show_region "$OFFSET_5G" 20
+
+          echo "6 GHz:"
+          show_region "$OFFSET_6G" 32
+
+          echo
+          echo "Patch completed successfully."
+          SCRIPT
+
+          chmod +x txpwr-patcher.sh
+
+      - name: Patch AX3000T ALL
+        run: |
+          cp factory.bin factory_patched.bin
+
+          ./txpwr-patcher.sh factory_patched.bin
+
+      - name: Generate SHA256
+        run: |
+          sha256sum factory.bin > factory.bin.sha256
+          sha256sum factory_patched.bin > factory_patched.bin.sha256
+
+          echo "Original:"
+          cat factory.bin.sha256
+
+          echo
+          echo "Patched:"
+          cat factory_patched.bin.sha256
+
+      - name: Upload patched Factory
+        uses: actions/upload-artifact@v4
+        with:
+          name: AX3000T-factory-patched-ALL
+          path: |
+            factory_patched.bin
+            factory_patched.bin.sha256
+
+      - name: Upload original Factory
+        uses: actions/upload-artifact@v4
+        with:
+          name: AX3000T-factory-original
+          path: |
+            factory.bin
+            factory.bin.sha256
