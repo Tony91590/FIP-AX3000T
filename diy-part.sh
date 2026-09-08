@@ -1,4 +1,4 @@
-# diy ATF and u-boot for xiaomi ax3000t based on mt798x
+# diy ATF and u-boot for Redmi AX6000 based on mt798x
 
 BUILD_SH="build.sh"
 
