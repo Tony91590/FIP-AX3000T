@@ -7,7 +7,6 @@ ATF_SEL=3
 
 case $UBOOT_SEL in
     1) UBOOT="uboot-mtk-20220606" ;;
-    2) UBOOT="uboot-mtk-20230718-09eda825" ;;
 esac
 
 case $ATF_SEL in
@@ -94,8 +93,4 @@ rm -f uboot-mtk-20220606/configs/mt7986_tplink_tl-xtr8488_defconfig.orig
 rm -f atf-20220606-637ba581b/plat/mediatek/mt7981/drivers/pll/pll.c.orig
 rm -f atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.c.orig
 rm -f uboot-mtk-20230718-09eda825/cmd/glbtn.c.orig
-rm -f uboot-mtk-20230718-09eda825/arch/arm/dts/mt7981-ax3000t.dts.orig
 rm -f uboot-mtk-20220606/cmd/glbtn.c.orig
-rm -f uboot-mtk-20220606/arch/arm/dts/mt7981-ax3000t.dts.orig
-rm -f atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.c.orig
-rm -f atf-20231013-0ea67d76a/plat/mediatek/mt7981/drivers/pll/pll.h.orig
