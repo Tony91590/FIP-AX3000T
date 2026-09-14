@@ -437,7 +437,7 @@
  	button_label = env_get("glbtn_key");
  	if (!button_label)
 -		button_label = "reset";
-+		button_label = "reset,mesh";
++		button_label = "reset,wps";
 +
 +	strncpy(buttons, button_label, sizeof(buttons) - 1);
 +	buttons[sizeof(buttons) - 1] = '\0';
