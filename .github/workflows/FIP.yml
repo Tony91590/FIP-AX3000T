@@ -123,7 +123,7 @@ jobs:
           echo "Compilation avec $(nproc) threads"
 
           SOC=mt7981 \
-          BOARD=xiaomi_ax3000t \
+          BOARD=cudy_wr3000s-v1 \
           VERSION=2025 \
           FSTHEME=GL \
           MULTI_LAYOUT=1 \
