@@ -520,7 +520,7 @@
 +_ENABLE_OVERRIDE_FIP_SIZE=y
 +OVERRIDE_FIP_SIZE=0x200000
 --- /dev/null
-+++ b/configs-fit/mt7981_cudy_wr3000s-v1_defconfig
++++ b/uboot-mtk-20250711/configs-fit/mt7981_cudy_wr3000s-v1_defconfig
 @@ -0,0 +1,110 @@
 +CONFIG_ARM=y
 +CONFIG_SYS_HAS_NONCACHED_MEMORY=y
@@ -633,7 +633,7 @@
 +CONFIG_ENV_UBI_VOLUME_CREATE=y
 +CONFIG_MTK_BOOTMENU_UBI=y
 --- /dev/null
-+++ b/arch/arm/dts/mt7981-cudy-wr3000s-v1.dts
++++ b/uboot-mtk-20250711/arch/arm/dts/mt7981-cudy-wr3000s-v1.dts
 @@ -0,0 +1,132 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +
