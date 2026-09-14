@@ -513,6 +513,7 @@
 +++ b/atf-20240117-bacca82a8/configs/mt7981_cudy_wr3000s-v1_defconfig
 @@ -0,0 +1,7 @@
 +_PLAT_MT7981=y
++_DRAM_DDR3=y
 +_MT7981_BOARD_BGA=y
 +_NAND_SKIP_BAD=y
 +_ENABLE_OVERRIDE_FIP_BASE=y
