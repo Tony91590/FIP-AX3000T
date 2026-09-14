@@ -126,7 +126,7 @@ jobs:
           BOARD=cudy_wr3000s-v1 \
           VERSION=2025 \
           FSTHEME=GL \
-          MULTI_LAYOUT=1 \
+          VARIANT=ubootmod \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
