@@ -122,8 +122,8 @@ jobs:
 
           echo "Compilation avec $(nproc) threads"
 
-          SOC=mt7981 \
-          BOARD=cudy_wr3000s-v1 \
+          SOC=mt7986 \
+          BOARD=redmi_ax6000 \
           VERSION=2025 \
           FSTHEME=GL \
           VARIANT=ubootmod \
