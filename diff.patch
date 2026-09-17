@@ -1,14 +1,3 @@
-From 4d3eeae91d2edcd6b662468da79f3e67c78ca915 Mon Sep 17 00:00:00 2001
-From: Tony91590 <91764010+Tony91590@users.noreply.github.com>
-Date: Wed, 16 Sep 2026 23:22:07 +0200
-Subject: [PATCH] Update main.js
-
----
- .../failsafe/embedded/fsdata-gl/main.js              | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
-
-diff --git a/uboot-mtk-20250711/failsafe/embedded/fsdata-gl/main.js b/uboot-mtk-20250711/failsafe/embedded/fsdata-gl/main.js
-index a06fa08cd..126d14c33 100644
 --- a/uboot-mtk-20250711/failsafe/embedded/fsdata-gl/main.js
 +++ b/uboot-mtk-20250711/failsafe/embedded/fsdata-gl/main.js
 @@ -69,20 +69,12 @@ function getmtdlayoutlist() {
