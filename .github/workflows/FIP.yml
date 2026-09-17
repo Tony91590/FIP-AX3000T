@@ -125,7 +125,7 @@ jobs:
           SOC=mt7986 \
           BOARD=redmi_ax6000 \
           VERSION=SP1 \
-          FSTHEME=GL \
+          TELNETD=1 \
           VARIANT=ubootmod \
           ./build.sh
 
