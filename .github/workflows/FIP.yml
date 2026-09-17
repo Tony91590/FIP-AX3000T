@@ -124,7 +124,7 @@ jobs:
 
           SOC=mt7986 \
           BOARD=redmi_ax6000 \
-          VERSION=SP1 \
+          VERSION=2025 \
           TELNETD=1 \
           VARIANT=ubootmod \
           ./build.sh
