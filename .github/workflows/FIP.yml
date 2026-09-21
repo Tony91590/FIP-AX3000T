@@ -10,8 +10,8 @@ on:
         default: "false"
 
 env:
-  REPO_URL: https://github.com/Tony91590/bl-mt798x-dhcpd
-  REPO_BRANCH: 2025
+  REPO_URL: https://github.com/Yuzhii0718/bl-mt798x-dhcpd
+  REPO_BRANCH: master
   REPO_COMMIT:
   DIY_P_SH: diy-part.sh
   SSH_ACTIONS: false
@@ -123,8 +123,8 @@ jobs:
           echo "Compilation avec $(nproc) threads"
 
           SOC=mt7986 \
-          BOARD=xiaomi_redmi-ax6000 \
-          VARIANT=openwrt \
+          BOARD=redmi-ax6000 \
+          VARIANT=ubootmod \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
