@@ -124,7 +124,6 @@ jobs:
 
           SOC=mt7986 \
           BOARD=xiaomi_redmi-ax6000 \
-          VERSION=SP2 \
           VARIANT=openwrt \
           ./build.sh
 
