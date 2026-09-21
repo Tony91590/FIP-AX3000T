@@ -124,9 +124,8 @@ jobs:
 
           SOC=mt7986 \
           BOARD=redmi_ax6000 \
-          VERSION=SP1 \
-          TELNETD=1 \
-          VARIANT=ubootmod \
+          VERSION=SP2 \
+          VARIANT=openwrt \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
