@@ -125,6 +125,7 @@ jobs:
           SOC=mt7986 \
           BOARD=redmi_ax6000 \
           VARIANT=ubootmod \
+          VERSION=SP1 \
           ./build.sh
 
           echo "FILE_DATE=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
