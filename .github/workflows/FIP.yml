@@ -10,7 +10,7 @@ on:
         default: "false"
 
 env:
-  REPO_URL: https://github.com/Yuzhii0718/bl-mt798x-dhcpd
+  REPO_URL: https://github.com/Tony91590/bl-mt798x-dhcpd
   REPO_BRANCH: master
   REPO_COMMIT:
   DIY_P_SH: diy-part.sh
